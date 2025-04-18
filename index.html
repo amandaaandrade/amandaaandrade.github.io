@@ -1,55 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Project Dream</title>
-  <style>
-    body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-      background-color: rgb(61, 61, 61);
-      margin: 0;
-      padding: 0;
-      background-image: url('Dream Animatic shots/bg.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      height: 100vh;
-    }
-
-    .video-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    video {
-      width: 80%;
-      max-width: 900px;
-      height: auto;
-    }
-  </style>
-</head>
 <body>
 
   <div class="video-container">
-    <video id="videoPlayer" autoplay muted loop>
+    <video id="videoPlayer" muted playsinline>
       <source id="videoSource" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
 
+  <button id="startBtn" style="margin-top: 20px; padding: 10px 20px; font-size: 18px;">Start Video</button>
+
   <script>
     const videoFilesOriginal = [
-      "https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/refs/heads/main/Dream%20Animatic%20shots/Open%20Type%20Submission.mp4",
-      "https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/refs/heads/main/Dream%20Animatic%20shots/drean%20comp.mp4"
+      "https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/main/Dream%20Animatic%20shots/Open%20Type%20Submission.mp4",
+      "https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/main/Dream%20Animatic%20shots/drean%20comp.mp4"
     ];
 
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
     const videoElement = document.getElementById("videoPlayer");
     const videoSource = document.getElementById("videoSource");
+    const startBtn = document.getElementById("startBtn");
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -57,8 +27,6 @@
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
-
-    shuffleArray(videoFiles);
 
     function playCurrentVideo() {
       if (currentIndex >= videoFiles.length) {
@@ -70,13 +38,19 @@
       videoSource.src = videoPath;
       videoElement.load();
 
-      videoElement.play().catch(err => {
-        console.error("Video autoplay failed:", err);
-      });
+      videoElement.play()
+        .then(() => console.log("Playing:", videoPath))
+        .catch(err => {
+          console.error("Video autoplay failed:", err);
+        });
     }
 
-    // Start playing the first video automatically when the page loads
-    window.onload = playCurrentVideo;
+    shuffleArray(videoFiles);
+
+    startBtn.addEventListener("click", () => {
+      startBtn.style.display = "none"; // Hide button after first click
+      playCurrentVideo();
+    });
 
     videoElement.onended = () => {
       currentIndex++;
@@ -91,4 +65,3 @@
   </script>
 
 </body>
-</html>
