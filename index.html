@@ -34,7 +34,7 @@
 </head>
 <body>
 
-  <video id="videoPlayer" class="hidden" playsinline></video>
+  <video id="videoPlayer" playsinline muted></video>
 
   <script>
     const videoFilesOriginal = [
@@ -65,11 +65,11 @@
       const videoPath = videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
-      videoElement.classList.remove("hidden"); // Make sure it's visible
+      videoElement.classList.remove("hidden"); // Ensure the video is visible
 
-      videoElement.play().catch(err =>
-        console.error("Video autoplay failed:", err)
-      );
+      videoElement.play().catch(err => {
+        console.error("Video autoplay failed:", err);
+      });
     }
 
     // Start playing the first video automatically when the page loads
