@@ -22,7 +22,7 @@
       display: block;
       margin: 20px auto 0;
       width: 540px;
-      height: auto;
+      height: 207.5px;
       transition: transform 0.3s ease;
       cursor: pointer;
     }
@@ -47,22 +47,21 @@
 </head>
 <body>
 
-  <img id="dreamImage" src="Dream Animatic shots/Dream title.png" alt="Dream Title" />
+  <img id="dreamImage" src="Dream Animatic shots/Dream title.png" width="540" height="207.5" alt="Dream Title" />
+
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
     const videoFilesOriginal = [
-      "Open Type Submission.mp4",
-      "DREAM EYE SHOT.mp4",
-      "dream comp.mp4"
+      "Open Type Submission.mp4", "DREAM EYE SHOT.mp4","drean comp.mp4"
+      
     ];
 
-    const folderPath = "Dream Animatic shots/";
+    let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
     const videoElement = document.getElementById("videoPlayer");
-    const dreamImage = document.getElementById("dreamImage");
+    const folderPath = "Dream Animatic shots/";
 
-    // Shuffle videos
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -70,27 +69,38 @@
       }
     }
 
-    const videoFiles = [...videoFilesOriginal];
     shuffleArray(videoFiles);
 
     function playCurrentVideo() {
-      const currentFile = folderPath + videoFiles[currentIndex];
-      videoElement.src = currentFile;
+      if (currentIndex >= videoFiles.length) {
+        shuffleArray(videoFiles);
+        currentIndex = 0;
+      }
+
+      const videoPath = folderPath + videoFiles[currentIndex];
+      videoElement.src = videoPath;
       videoElement.load();
-      videoElement.play().catch(err => {
-        console.error("Playback failed for:", currentFile, err);
-      });
+
+      videoElement.play().catch(err =>
+        console.error("Video autoplay failed:", err)
+      );
     }
 
+    const dreamImage = document.getElementById("dreamImage");
     dreamImage.addEventListener("click", () => {
-      dreamImage.classList.add("hidden");
       videoElement.classList.remove("hidden");
       playCurrentVideo();
-    });
 
-    videoElement.addEventListener("ended", () => {
-      currentIndex = (currentIndex + 1) % videoFiles.length; // Loop forever
-      playCurrentVideo();
+      videoElement.onended = () => {
+        currentIndex++;
+        playCurrentVideo();
+      };
+
+      videoElement.onerror = () => {
+        console.error("Error loading video, skipping to next.");
+        currentIndex++;
+        playCurrentVideo();
+      };
     });
   </script>
 
