@@ -18,34 +18,39 @@
       height: 100vh;
     }
 
+    .video-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
     video {
       width: 80%;
       max-width: 900px;
       height: auto;
-      object-fit: contain;
-      margin: 20px auto;
-      display: block;
-    }
-
-    .hidden {
-      display: none;
     }
   </style>
 </head>
 <body>
 
-  <video id="videoPlayer" playsinline muted></video>
+  <div class="video-container">
+    <video id="videoPlayer" autoplay muted loop>
+      <source id="videoSource" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <script>
     const videoFilesOriginal = [
-      "https://drive.google.com/uc?export=download&id=1zyRQNTIFSOObKoMZ80vnq9WZKzUw8eeH",  // Open Type Submission.mp4
-      "https://drive.google.com/uc?export=download&id=1Yncy9krEFLiEATaCdsq_kRiwUCnUjT9L",  // drean comp.mp4
-      "https://drive.google.com/uc?export=download&id=1yvvUzk2NV-hR-3Cnh1R1t_nKr9cSlKqS"   // DREAM EYE SHOT.mp4
+      "https://drive.google.com/uc?export=download&id=1zyRQNTIFSOObKoMZ80vnq9WZKzUw8eeH",  // Open Type Submission
+      "https://drive.google.com/uc?export=download&id=1Yncy9krEFLiEATaCdsq_kRiwUCnUjT9L",  // DREAM COMP
+      "https://drive.google.com/uc?export=download&id=1yvvUzk2NV-hR-3Cnh1R1t_nKr9cSlKqS"   // Dream Eye Shot
     ];
 
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
     const videoElement = document.getElementById("videoPlayer");
+    const videoSource = document.getElementById("videoSource");
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -63,9 +68,8 @@
       }
 
       const videoPath = videoFiles[currentIndex];
-      videoElement.src = videoPath;
+      videoSource.src = videoPath;
       videoElement.load();
-      videoElement.classList.remove("hidden"); // Ensure the video is visible
 
       videoElement.play().catch(err => {
         console.error("Video autoplay failed:", err);
