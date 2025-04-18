@@ -1,25 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Dream</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: rgb(61, 61, 61);
+      margin: 0;
+      padding: 0;
+      background-image: url('Dream Animatic shots/bg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+    }
+
+    #dreamImage {
+      display: block;
+      margin: 20px auto 0;
+      width: 540px;
+      height: 207.5px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    #dreamImage:hover {
+      transform: scale(0.95);
+    }
+
+    video {
+      width: 80%;
+      max-width: 900px;
+      height: auto;
+      object-fit: contain;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
 <body>
 
-  <div class="video-container">
-    <video id="videoPlayer" muted playsinline>
-      <source id="videoSource" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
+  <img id="dreamImage" src="Dream Animatic shots/Dream title.png" width="540" height="207.5" alt="Dream Title" />
 
-  <button id="startBtn" style="margin-top: 20px; padding: 10px 20px; font-size: 18px;">Start Video</button>
+  <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
     const videoFilesOriginal = [
-      "https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/main/Dream%20Animatic%20shots/Open%20Type%20Submission.mp4",
-      "https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/main/Dream%20Animatic%20shots/drean%20comp.mp4"
+      "Open Type Submission.mp4", "DREAM EYE SHOT.mp4","drean comp.mp4"
+      
     ];
 
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
     const videoElement = document.getElementById("videoPlayer");
-    const videoSource = document.getElementById("videoSource");
-    const startBtn = document.getElementById("startBtn");
+    const folderPath = "Dream Animatic shots/";
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -28,40 +69,40 @@
       }
     }
 
+    shuffleArray(videoFiles);
+
     function playCurrentVideo() {
       if (currentIndex >= videoFiles.length) {
         shuffleArray(videoFiles);
         currentIndex = 0;
       }
 
-      const videoPath = videoFiles[currentIndex];
-      videoSource.src = videoPath;
+      const videoPath = folderPath + videoFiles[currentIndex];
+      videoElement.src = videoPath;
       videoElement.load();
 
-      videoElement.play()
-        .then(() => console.log("Playing:", videoPath))
-        .catch(err => {
-          console.error("Video autoplay failed:", err);
-        });
+      videoElement.play().catch(err =>
+        console.error("Video autoplay failed:", err)
+      );
     }
 
-    shuffleArray(videoFiles);
-
-    startBtn.addEventListener("click", () => {
-      startBtn.style.display = "none"; // Hide button after first click
+    const dreamImage = document.getElementById("dreamImage");
+    dreamImage.addEventListener("click", () => {
+      videoElement.classList.remove("hidden");
       playCurrentVideo();
+
+      videoElement.onended = () => {
+        currentIndex++;
+        playCurrentVideo();
+      };
+
+      videoElement.onerror = () => {
+        console.error("Error loading video, skipping to next.");
+        currentIndex++;
+        playCurrentVideo();
+      };
     });
-
-    videoElement.onended = () => {
-      currentIndex++;
-      playCurrentVideo();
-    };
-
-    videoElement.onerror = () => {
-      console.error("Error loading video, skipping to next.");
-      currentIndex++;
-      playCurrentVideo();
-    };
   </script>
 
 </body>
+</html>
