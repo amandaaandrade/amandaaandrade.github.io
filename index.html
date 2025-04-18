@@ -53,14 +53,14 @@
 
   <script>
     const videoFilesOriginal = [
-      "Open Type Submission.mp4", "DREAM EYE SHOT.mp4","drean comp.mp4"
-      
+      "https://drive.google.com/file/d/1zyRQNTIFSOObKoMZ80vnq9WZKzUw8eeH/preview",  // Open Type Submission.mp4
+      "https://drive.google.com/file/d/1Yncy9krEFLiEATaCdsq_kRiwUCnUjT9L/preview",  // drean comp.mp4
+      "https://drive.google.com/file/d/1yvvUzk2NV-hR-3Cnh1R1t_nKr9cSlKqS/preview"   // DREAM EYE SHOT.mp4
     ];
 
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
     const videoElement = document.getElementById("videoPlayer");
-    const folderPath = "Dream Animatic shots/";
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -77,7 +77,7 @@
         currentIndex = 0;
       }
 
-      const videoPath = folderPath + videoFiles[currentIndex];
+      const videoPath = videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
 
