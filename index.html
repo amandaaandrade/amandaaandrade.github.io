@@ -18,19 +18,6 @@
       height: 100vh;
     }
 
-    #dreamImage {
-      display: block;
-      margin: 20px auto 0;
-      width: 540px;
-      height: 207.5px;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-
-    #dreamImage:hover {
-      transform: scale(0.95);
-    }
-
     video {
       width: 80%;
       max-width: 900px;
@@ -46,8 +33,6 @@
   </style>
 </head>
 <body>
-
-  <img id="dreamImage" src="Dream Animatic shots/Dream title.png" width="540" height="207.5" alt="Dream Title" />
 
   <video id="videoPlayer" class="hidden" playsinline></video>
 
@@ -80,28 +65,26 @@
       const videoPath = videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
+      videoElement.classList.remove("hidden"); // Make sure it's visible
 
       videoElement.play().catch(err =>
         console.error("Video autoplay failed:", err)
       );
     }
 
-    const dreamImage = document.getElementById("dreamImage");
-    dreamImage.addEventListener("click", () => {
-      videoElement.classList.remove("hidden");
+    // Start playing the first video automatically when the page loads
+    window.onload = playCurrentVideo;
+
+    videoElement.onended = () => {
+      currentIndex++;
       playCurrentVideo();
+    };
 
-      videoElement.onended = () => {
-        currentIndex++;
-        playCurrentVideo();
-      };
-
-      videoElement.onerror = () => {
-        console.error("Error loading video, skipping to next.");
-        currentIndex++;
-        playCurrentVideo();
-      };
-    });
+    videoElement.onerror = () => {
+      console.error("Error loading video, skipping to next.");
+      currentIndex++;
+      playCurrentVideo();
+    };
   </script>
 
 </body>
