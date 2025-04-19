@@ -25,8 +25,14 @@
       background-repeat: no-repeat;
     }
 
+    #dreamImageWrapper {
+      height: 207.5px; /* Preserve height when hidden */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     #dreamImage {
-      display: block;
       width: 540px;
       height: 207.5px;
       transition: transform 0.3s ease;
@@ -48,13 +54,15 @@
     }
 
     .hidden {
-      display: none;
+      visibility: hidden;
     }
   </style>
 </head>
 <body>
 
-  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" width="540" height="207.5" alt="Dream Title" />
+  <div id="dreamImageWrapper">
+    <img id="dreamImage" src="dream-animatic-shots/dream-title.png" width="540" height="207.5" alt="Dream Title" />
+  </div>
 
   <video id="videoPlayer" class="hidden" playsinline></video>
 
