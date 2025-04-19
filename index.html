@@ -20,28 +20,12 @@
       display: none;
     }
 
-    #spotlightOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 5;
-      background: radial-gradient(
-        circle at var(--x, 50%) var(--y, 50%),
-        rgba(0, 0, 0, 0) 100px,
-        rgba(0, 0, 0, 0.6) 250px
-      );
-      transition: background 0.3s ease;
-    }
-
     #dreamImage, #videoPlayer {
       position: absolute;
       width: 540px;
       height: 207.5px;
       transition: transform 0.3s ease;
-      z-index: 10;
+      z-index: 1; /* Put behind spotlight */
     }
 
     #dreamImage:hover {
@@ -52,13 +36,27 @@
       width: 80vw;
       height: auto;
       border-radius: 15px;
+      z-index: 10;
+    }
+
+    #spotlightOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 5; /* In front of dream image */
+      background: radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        rgba(0, 0, 0, 0) 50px,
+        rgba(0, 0, 0, 0.8) 150px
+      );
+      transition: background 0.3s ease;
     }
   </style>
 </head>
 <body>
-
-  <!-- Spotlight Effect Overlay -->
-  <div id="spotlightOverlay"></div>
 
   <!-- Static/Glowing Dream Image -->
   <img
@@ -66,6 +64,9 @@
     src="dream-animatic-shots/dream-title.png"
     alt="Dream Title"
   />
+
+  <!-- Spotlight Effect Overlay -->
+  <div id="spotlightOverlay"></div>
 
   <!-- Main Video Player -->
   <video id="videoPlayer" class="hidden" playsinline></video>
@@ -92,15 +93,15 @@
     // ✨ Swap to glow gif on hover
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.src = glowGif;
-      spotlight.style.background = "rgba(0, 0, 0, 0)"; // removes fog
+      spotlight.style.background = "rgba(0, 0, 0, 0)"; // remove darkness on hover
     });
 
     dreamImage.addEventListener("mouseleave", () => {
       dreamImage.src = stillImage;
       spotlight.style.background = `radial-gradient(
         circle at var(--x, 50%) var(--y, 50%),
-        rgba(0, 0, 0, 0) 100px,
-        rgba(0, 0, 0, 0.6) 250px
+        rgba(0, 0, 0, 0) 50px,
+        rgba(0, 0, 0, 0.8) 150px
       )`;
     });
 
@@ -131,7 +132,7 @@
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
       videoElement.classList.remove("hidden");
-      spotlight.classList.add("hidden"); // Hide spotlight when video starts
+      spotlight.classList.add("hidden");
       playCurrentVideo();
 
       videoElement.onended = () => {
