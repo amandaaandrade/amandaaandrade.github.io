@@ -11,7 +11,7 @@
       background-color: rgb(61, 61, 61);
       margin: 0;
       padding: 0;
-      background-image: url('dream-animatic-shots/bg.png'); /* only if you have this image */
+      background-image: url('dream-animatic-shots/bg.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -23,23 +23,51 @@
       justify-content: center;
       align-items: center;
       height: 100%;
+      position: relative;
     }
 
     video {
       width: 80%;
       max-width: 900px;
       height: auto;
+      display: none;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .play-btn {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background-color: #ffffffdd;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .play-btn:hover {
+      background-color: #ffffff;
     }
   </style>
 </head>
 <body>
 
   <div class="video-container">
-    <video controls>
-      <source src="https://amandaaandrade.github.io/dream-animatic-shots/dream-1.mp4" type="video/mp4">
+    <video id="dreamVideo">
+      <source src="dream-animatic-shots/dream-1.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <button class="play-btn" onclick="playVideo()">Play Dream</button>
   </div>
+
+  <script>
+    function playVideo() {
+      const video = document.getElementById("dreamVideo");
+      video.style.display = "block";
+      video.play();
+      document.querySelector(".play-btn").style.display = "none";
+    }
+  </script>
 
 </body>
 </html>
