@@ -6,41 +6,43 @@
   <title>Project Dream</title>
   <style>
     html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      height: 100%;
     }
 
     body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
       font-family: Arial, sans-serif;
+      text-align: center;
       background-color: rgb(61, 61, 61);
       background-image: url('dream-animatic-shots/bg.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-    }
-
-    .center-wrapper {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+      transition: background 0.3s ease-in-out; /* Smooth transition for background */
     }
 
     #dreamImage {
+      display: block;
       width: 540px;
       height: 207.5px;
-      transition: transform 0.3s ease, opacity 0.5s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add glow effect to the image */
       cursor: pointer;
+      z-index: 10;
     }
 
     #dreamImage:hover {
       transform: scale(0.95);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Glow effect on hover */
     }
 
-    .hidden {
-      display: none;
+    body:hover {
+      background-color: rgb(61, 61, 61); /* Optional: Keep background color the same */
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Subtle glow around the whole page */
     }
 
     video {
@@ -49,28 +51,29 @@
       height: auto;
       object-fit: contain;
       border-radius: 15px;
-      display: none;
+      flex-shrink: 0;
     }
 
-    video.visible {
-      display: block;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="center-wrapper">
-    <img id="dreamImage" src="dream-animatic-shots/dream-title.png" alt="Dream Title" />
-    <video id="videoPlayer" playsinline></video>
-  </div>
+  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" width="540" height="207.5" alt="Dream Title" />
+
+  <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
-    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
+    const videoFilesOriginal = [
+      "dream-1.mp4", "dream-2.mp4"
+    ];
+
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
-
-    const dreamImage = document.getElementById("dreamImage");
     const videoElement = document.getElementById("videoPlayer");
+    const dreamImage = document.getElementById("dreamImage");
     const folderPath = "dream-animatic-shots/";
 
     function shuffleArray(array) {
@@ -91,12 +94,15 @@
       const videoPath = folderPath + videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
-      videoElement.play().catch(err => console.error("Video autoplay failed:", err));
+
+      videoElement.play().catch(err =>
+        console.error("Video autoplay failed:", err)
+      );
     }
 
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
-      videoElement.classList.add("visible");
+      videoElement.classList.remove("hidden");
       playCurrentVideo();
 
       videoElement.onended = () => {
