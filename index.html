@@ -20,12 +20,38 @@
       display: none;
     }
 
-    #dreamImage, #videoPlayer {
+    #dreamContainer {
+      position: relative;
+      z-index: 1;
+    }
+
+    #glowBehindTitle {
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 40%,
+        rgba(0, 0, 0, 0) 70%
+      );
+      filter: blur(40px);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #dreamImage {
       width: 540px;
       height: 207.5px;
       transition: transform 0.3s ease;
-      z-index: 1; /* Put behind spotlight */
+      z-index: 2;
+      position: relative;
     }
 
     #dreamImage:hover {
@@ -33,6 +59,7 @@
     }
 
     #videoPlayer {
+      position: absolute;
       width: 80vw;
       height: auto;
       border-radius: 15px;
@@ -46,7 +73,7 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 5; /* In front of dream image */
+      z-index: 5;
       background: radial-gradient(
         circle at var(--x, 50%) var(--y, 50%),
         rgba(0, 0, 0, 0) 50px,
@@ -58,12 +85,15 @@
 </head>
 <body>
 
-  <!-- Static/Glowing Dream Image -->
-  <img
-    id="dreamImage"
-    src="dream-animatic-shots/dream-title.png"
-    alt="Dream Title"
-  />
+  <!-- Glowing Dream Title -->
+  <div id="dreamContainer">
+    <div id="glowBehindTitle"></div>
+    <img
+      id="dreamImage"
+      src="dream-animatic-shots/dream-title.png"
+      alt="Dream Title"
+    />
+  </div>
 
   <!-- Spotlight Effect Overlay -->
   <div id="spotlightOverlay"></div>
@@ -79,6 +109,7 @@
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
     const spotlight = document.getElementById("spotlightOverlay");
+    const glowBehindTitle = document.getElementById("glowBehindTitle");
     const folderPath = "dream-animatic-shots/";
 
     const stillImage = folderPath + "dream-title.png";
@@ -90,14 +121,16 @@
       spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
-    // ✨ Swap to glow gif on hover
+    // ✨ Swap to glow gif on hover, illuminate background
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.src = glowGif;
-      spotlight.style.background = "rgba(0, 0, 0, 0)"; // remove darkness on hover
+      spotlight.style.background = "rgba(0, 0, 0, 0)";
+      glowBehindTitle.style.opacity = 1;
     });
 
     dreamImage.addEventListener("mouseleave", () => {
       dreamImage.src = stillImage;
+      glowBehindTitle.style.opacity = 0;
       spotlight.style.background = `radial-gradient(
         circle at var(--x, 50%) var(--y, 50%),
         rgba(0, 0, 0, 0) 50px,
@@ -131,6 +164,7 @@
 
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
+      document.getElementById("glowBehindTitle").classList.add("hidden");
       videoElement.classList.remove("hidden");
       spotlight.classList.add("hidden");
       playCurrentVideo();
