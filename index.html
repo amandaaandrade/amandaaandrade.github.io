@@ -27,7 +27,7 @@
     }
 
     .glow-animation {
-      background-image: url('dream-animatic-shots/title-glow.webp');
+      background-image: url('dream-animatic-shots/dream-title-glow.gif');
       background-size: cover;
       pointer-events: none;
     }
@@ -41,22 +41,21 @@
     alt="Dream Title"
   />
 
-  <!-- Glow WebP Animation Container -->
-  <div id="glowContainer" class="hidden"></div>
+  <!-- Glowing GIF Animation -->
+  <div id="glowAnimation" class="glow-animation hidden"></div>
 
   <!-- Video Player for main videos -->
   <video id="videoPlayer" class="hidden" playsinline muted></video>
 
   <script>
     const dreamImage = document.getElementById("dreamImage");
-    const glowContainer = document.getElementById("glowContainer");
+    const glowAnimation = document.getElementById("glowAnimation");
     const videoElement = document.getElementById("videoPlayer");
 
     const videoFiles = ["dream-1.mp4", "dream-2.mp4"];
     let currentIndex = 0;
     const folderPath = "dream-animatic-shots/";
 
-    // Shuffle the video array
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -66,31 +65,41 @@
 
     shuffle(videoFiles);
 
-    // Hover: replace WebP element to simulate one-time animation
+    // Hover: Show the glow GIF
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.classList.add("hidden");
+      glowAnimation.classList.remove("hidden");
 
-      const newGlow = document.createElement("div");
-      newGlow.className = "glow-animation";
-      newGlow.style.backgroundImage = "url('dream-animatic-shots/title-glow.webp')";
-
-      // Reset container and insert new glow
-      glowContainer.innerHTML = "";
-      glowContainer.classList.remove("hidden");
-      glowContainer.appendChild(newGlow);
-
-      // Hide glow + show static image after ~2.5s (match your WebP duration)
       setTimeout(() => {
-        glowContainer.classList.add("hidden");
+        glowAnimation.classList.add("hidden");
         dreamImage.classList.remove("hidden");
-      }, 2500); // adjust if needed
+      }, 2500); // Match the length of your GIF animation
     });
 
-    // Click: play video
+    // Click: Play main video
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
       videoElement.classList.remove("hidden");
       playCurrentVideo();
     });
 
-    function playCurrent
+    function playCurrentVideo() {
+      const file = videoFiles[currentIndex];
+      videoElement.src = folderPath + file;
+      videoElement.load();
+      videoElement.play().catch(e => console.error("Playback failed:", e));
+    }
+
+    videoElement.addEventListener("ended", () => {
+      currentIndex = (currentIndex + 1) % videoFiles.length;
+      playCurrentVideo();
+    });
+
+    videoElement.addEventListener("error", () => {
+      console.error("Video error, skipping...");
+      currentIndex = (currentIndex + 1) % videoFiles.length;
+      playCurrentVideo();
+    });
+  </script>
+</body>
+</html>
