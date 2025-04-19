@@ -15,16 +15,19 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      height: 100vh;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
     }
 
     #dreamImage {
-      display: block;
-      margin: 20px auto 0;
+      margin-top: 40px;
       width: 540px;
-      height: 207.5px;
-      transition: transform 0.3s ease;
+      height: auto;
       cursor: pointer;
+      transition: transform 0.3s ease;
     }
 
     #dreamImage:hover {
@@ -36,68 +39,69 @@
       max-width: 900px;
       height: auto;
       object-fit: contain;
-      margin: 20px auto;
+      margin: 30px auto;
       display: none;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
 <body>
 
-  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" alt="Dream Title" />
+  <!-- Button image -->
+  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" alt="Dream Title Button" />
 
+  <!-- Video player -->
   <video id="videoPlayer" playsinline></video>
 
   <script>
-    const videoFiles = [
-      "open-type-submission.mp4",
-      "dream-eye-shot.mp4",
-      "dream-comp.mp4"
-    ];
-
+    const videoFiles = ["dream-1.mp4", "dream-2.mp4"];
+    const folderPath = "dream-animatic-shots/";
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
-    const folderPath = "dream-animatic-shots/";
+
+    let shuffledVideos = [];
     let currentIndex = 0;
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
+    function shuffleVideos() {
+      shuffledVideos = [...videoFiles];
+      for (let i = shuffledVideos.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [shuffledVideos[i], shuffledVideos[j]] = [shuffledVideos[j], shuffledVideos[i]];
       }
+      currentIndex = 0;
     }
 
-    function playCurrentVideo() {
-      if (currentIndex >= videoFiles.length) {
-        shuffleArray(videoFiles);
-        currentIndex = 0;
+    function playVideo() {
+      if (currentIndex >= shuffledVideos.length) {
+        shuffleVideos();
       }
 
-      const videoPath = folderPath + videoFiles[currentIndex];
-      videoElement.src = videoPath;
+      const currentVideo = folderPath + shuffledVideos[currentIndex];
+      videoElement.src = currentVideo;
       videoElement.load();
-
-      videoElement.play().catch(err =>
-        console.error("Video autoplay failed:", err)
-      );
+      videoElement.play().catch(err => {
+        console.error("Autoplay failed:", err);
+      });
     }
 
     dreamImage.addEventListener("click", () => {
       dreamImage.style.display = "none";
       videoElement.style.display = "block";
-      shuffleArray(videoFiles);
-      playCurrentVideo();
-
-      videoElement.onended = () => {
-        currentIndex++;
-        playCurrentVideo();
-      };
-
-      videoElement.onerror = () => {
-        console.error("Error loading video, skipping to next.");
-        currentIndex++;
-        playCurrentVideo();
-      };
+      shuffleVideos();
+      playVideo();
     });
+
+    videoElement.onended = () => {
+      currentIndex++;
+      playVideo();
+    };
+
+    videoElement.onerror = () => {
+      console.error("Error playing video. Skipping.");
+      currentIndex++;
+      playVideo();
+    };
   </script>
 
 </body>
