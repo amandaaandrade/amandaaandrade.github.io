@@ -17,39 +17,33 @@
     muted
     playsinline
   >
-    <source src="dream-animatic-shots/dream-title-glow.mov" type="video/mp4" />
+    <source src="dream-animatic-shots/dream-title-glow.mov" type="video/quicktime" />
   </video>
 
-  <!-- Glowing WebP Animation -->
-  <div class="glow-animation hidden"></div>
-
-  <!-- Video Player -->
+  <!-- Video Player for main videos -->
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
     const dreamImage = document.getElementById("dreamImage");
     const glowVideo = document.getElementById("glowVideo");
-    const glowAnimation = document.querySelector(".glow-animation");
+    const videoElement = document.getElementById("videoPlayer");
 
     const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
-    const videoElement = document.getElementById("videoPlayer");
     const folderPath = "dream-animatic-shots/";
 
     // Hover to play glow animation once
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.classList.add("hidden");
       glowVideo.classList.remove("hidden");
-      glowAnimation.classList.remove("hidden");
       glowVideo.currentTime = 0;
       glowVideo.play();
     });
 
-    // Once the glow video finishes, hide the glow animation and video, then show the image again
+    // Once the glow video finishes, hide the glow video, then show the image again
     glowVideo.addEventListener("ended", () => {
       glowVideo.classList.add("hidden");
-      glowAnimation.classList.add("hidden");
       dreamImage.classList.remove("hidden");
     });
 
@@ -96,23 +90,4 @@
   </script>
 
   <style>
-    /* Styling for the glow animation */
-    .glow-animation {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('Glow.webp');
-      background-size: cover;
-      animation: glow 5s infinite;
-      pointer-events: none;
-    }
-
-    @keyframes glow {
-      0% { opacity: 0.5; }
-      50% { opacity: 1; }
-      100% { opacity: 0.5; }
-    }
-  </style>
-</body>
+    /* Styling for the*
