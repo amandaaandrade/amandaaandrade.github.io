@@ -1,87 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Project Dream</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: rgb(61, 61, 61);
-      background-image: url('dream-animatic-shots/bg-no-glow.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    #dreamImage {
-      display: block;
-      width: 540px;
-      height: 207.5px;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    #dreamImage:hover {
-      transform: scale(0.95);
-    }
-
-    video {
-      width: 80%;
-      max-width: 900px;
-      height: auto;
-      object-fit: contain;
-      border-radius: 15px;
-      flex-shrink: 0;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
 <body>
+  <!-- Static Dream Image -->
+  <img
+    id="dreamImage"
+    src="dream-animatic-shots/dream-title.png"
+    width="540"
+    height="207.5"
+    alt="Dream Title"
+  />
 
-  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" width="540" height="207.5" alt="Dream Title" />
+  <!-- Glowing Video Animation (Initially hidden) -->
+  <video
+    id="glowVideo"
+    class="hidden"
+    width="540"
+    height="207.5"
+    muted
+    playsinline
+  >
+    <source src="dream-animatic-shots/dream-title-glow.mov" type="video/mp4" />
+  </video>
 
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
-    const videoFilesOriginal = [
-      "dream-1.mp4", "dream-2.mp4"
-    ];
+    const dreamImage = document.getElementById("dreamImage");
+    const glowVideo = document.getElementById("glowVideo");
 
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
     const videoElement = document.getElementById("videoPlayer");
-    const dreamImage = document.getElementById("dreamImage");
     const folderPath = "dream-animatic-shots/";
 
-    const stillImage = folderPath + "dream-title.png";
-    const glowGif = folderPath + "dream-title-glow.mov";
-
-    // Hover behavior: swap image to glowing gif
+    // Hover to play glow animation once
     dreamImage.addEventListener("mouseenter", () => {
-      dreamImage.src = glowGif;
+      dreamImage.classList.add("hidden");
+      glowVideo.classList.remove("hidden");
+      glowVideo.currentTime = 0;
+      glowVideo.play();
     });
 
-    // Leave hover: revert to still image
-    dreamImage.addEventListener("mouseleave", () => {
-      dreamImage.src = stillImage;
+    // Once the glow finishes, hide the video and show the image again
+    glowVideo.addEventListener("ended", () => {
+      glowVideo.classList.add("hidden");
+      dreamImage.classList.remove("hidden");
     });
 
+    // Shuffle and play main videos on click
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -100,8 +65,7 @@
       const videoPath = folderPath + videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
-
-      videoElement.play().catch(err =>
+      videoElement.play().catch((err) =>
         console.error("Video autoplay failed:", err)
       );
     }
@@ -110,19 +74,17 @@
       dreamImage.classList.add("hidden");
       videoElement.classList.remove("hidden");
       playCurrentVideo();
-
-      videoElement.onended = () => {
-        currentIndex++;
-        playCurrentVideo();
-      };
-
-      videoElement.onerror = () => {
-        console.error("Error loading video, skipping to next.");
-        currentIndex++;
-        playCurrentVideo();
-      };
     });
-  </script>
 
+    videoElement.onended = () => {
+      currentIndex++;
+      playCurrentVideo();
+    };
+
+    videoElement.onerror = () => {
+      console.error("Error loading video, skipping to next.");
+      currentIndex++;
+      playCurrentVideo();
+    };
+  </script>
 </body>
-</html>
