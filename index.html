@@ -19,7 +19,7 @@
       font-family: Arial, sans-serif;
       text-align: center;
       background-color: rgb(61, 61, 61);
-      background-image: url('dream-animatic-shots/bg.png');
+      background-image: url('dream-animatic-shots/bg-no-glow.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -29,15 +29,13 @@
       display: block;
       width: 540px;
       height: 207.5px;
-      transition: transform 0.3s ease, filter 0.3s ease;
+      transition: transform 0.3s ease;
       cursor: pointer;
       z-index: 10;
-      filter: drop-shadow(0 0 0 transparent); /* No glow by default */
     }
 
     #dreamImage:hover {
       transform: scale(0.95);
-      filter: drop-shadow(0 0 10px #00ff99) drop-shadow(0 0 20px #00ff99);
     }
 
     video {
@@ -70,6 +68,19 @@
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
     const folderPath = "dream-animatic-shots/";
+
+    const stillImage = folderPath + "dream-title.png";
+    const glowGif = folderPath + "dream-title-glow.gif";
+
+    // Hover behavior: swap image to glowing gif
+    dreamImage.addEventListener("mouseenter", () => {
+      dreamImage.src = glowGif;
+    });
+
+    // Leave hover: revert to still image
+    dreamImage.addEventListener("mouseleave", () => {
+      dreamImage.src = stillImage;
+    });
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
