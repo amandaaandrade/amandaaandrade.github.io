@@ -20,10 +20,23 @@
       display: none;
     }
 
+    /* Adjust size and center */
     #dreamImage, #videoPlayer {
       position: absolute;
       width: 540px;
       height: 207.5px;
+      transition: transform 0.3s ease;  /* Smooth transition for scaling */
+    }
+
+    /* Shrink the image on hover */
+    #dreamImage:hover {
+      transform: scale(0.95);  /* Slightly shrink the image */
+    }
+
+    /* Full-screen video scaling when played (80% size) */
+    #videoPlayer {
+      width: 80vw;  /* 80% of viewport width */
+      height: auto;  /* Maintain aspect ratio */
     }
   </style>
 </head>
