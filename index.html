@@ -25,23 +25,21 @@
       background-repeat: no-repeat;
     }
 
-    #dreamImageWrapper {
-      height: 207.5px; /* Preserve height when hidden */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
     #dreamImage {
       width: 540px;
       height: 207.5px;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, opacity 0.5s ease;
       cursor: pointer;
       z-index: 10;
     }
 
     #dreamImage:hover {
       transform: scale(0.95);
+    }
+
+    .faded {
+      opacity: 0;
+      pointer-events: none;
     }
 
     video {
@@ -51,28 +49,21 @@
       object-fit: contain;
       border-radius: 15px;
       flex-shrink: 0;
-    }
-
-    .hidden {
-      visibility: hidden;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <div id="dreamImageWrapper">
-    <img id="dreamImage" src="dream-animatic-shots/dream-title.png" width="540" height="207.5" alt="Dream Title" />
-  </div>
+  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" alt="Dream Title" />
 
-  <video id="videoPlayer" class="hidden" playsinline></video>
+  <video id="videoPlayer" class="faded" playsinline></video>
 
   <script>
-    const videoFilesOriginal = [
-      "dream-1.mp4", "dream-2.mp4"
-    ];
-
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
+
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
     const folderPath = "dream-animatic-shots/";
@@ -102,8 +93,8 @@
     }
 
     dreamImage.addEventListener("click", () => {
-      dreamImage.classList.add("hidden");
-      videoElement.classList.remove("hidden");
+      dreamImage.classList.add("faded");
+      videoElement.classList.remove("faded");
       playCurrentVideo();
 
       videoElement.onended = () => {
