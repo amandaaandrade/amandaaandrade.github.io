@@ -18,55 +18,86 @@
       height: 100vh;
     }
 
-    .video-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      position: relative;
+    #dreamImage {
+      display: block;
+      margin: 20px auto 0;
+      width: 540px;
+      height: 207.5px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    #dreamImage:hover {
+      transform: scale(0.95);
     }
 
     video {
       width: 80%;
       max-width: 900px;
       height: auto;
+      object-fit: contain;
+      margin: 20px auto;
       display: none;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .play-btn {
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      background-color: #ffffffdd;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .play-btn:hover {
-      background-color: #ffffff;
     }
   </style>
 </head>
 <body>
 
-  <div class="video-container">
-    <video id="dreamVideo">
-      <source src="dream-animatic-shots/dream-1.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <button class="play-btn" onclick="playVideo()">Play Dream</button>
-  </div>
+  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" alt="Dream Title" />
+
+  <video id="videoPlayer" playsinline></video>
 
   <script>
-    function playVideo() {
-      const video = document.getElementById("dreamVideo");
-      video.style.display = "block";
-      video.play();
-      document.querySelector(".play-btn").style.display = "none";
+    const videoFiles = [
+      "open-type-submission.mp4",
+      "dream-eye-shot.mp4",
+      "dream-comp.mp4"
+    ];
+
+    const videoElement = document.getElementById("videoPlayer");
+    const dreamImage = document.getElementById("dreamImage");
+    const folderPath = "dream-animatic-shots/";
+    let currentIndex = 0;
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
+
+    function playCurrentVideo() {
+      if (currentIndex >= videoFiles.length) {
+        shuffleArray(videoFiles);
+        currentIndex = 0;
+      }
+
+      const videoPath = folderPath + videoFiles[currentIndex];
+      videoElement.src = videoPath;
+      videoElement.load();
+
+      videoElement.play().catch(err =>
+        console.error("Video autoplay failed:", err)
+      );
+    }
+
+    dreamImage.addEventListener("click", () => {
+      dreamImage.style.display = "none";
+      videoElement.style.display = "block";
+      shuffleArray(videoFiles);
+      playCurrentVideo();
+
+      videoElement.onended = () => {
+        currentIndex++;
+        playCurrentVideo();
+      };
+
+      videoElement.onerror = () => {
+        console.error("Error loading video, skipping to next.");
+        currentIndex++;
+        playCurrentVideo();
+      };
+    });
   </script>
 
 </body>
