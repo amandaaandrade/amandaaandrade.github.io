@@ -78,4 +78,37 @@
 
     function playCurrentVideo() {
       if (currentIndex >= videoFiles.length) {
-        shuffleArray(videoFiles
+        shuffleArray(videoFiles);
+        currentIndex = 0;
+      }
+
+      const videoPath = folderPath + videoFiles[currentIndex];
+      videoElement.src = videoPath;
+      videoElement.load();
+
+      videoElement.play().catch(err =>
+        console.error("Video autoplay failed:", err)
+      );
+    }
+
+    const dreamImage = document.getElementById("dreamImage");
+    dreamImage.addEventListener("click", () => {
+      dreamImage.classList.add("hidden"); // Hide the image (button)
+      videoElement.classList.remove("hidden");
+      playCurrentVideo();
+
+      videoElement.onended = () => {
+        currentIndex++;
+        playCurrentVideo();
+      };
+
+      videoElement.onerror = () => {
+        console.error("Error loading video, skipping to next.");
+        currentIndex++;
+        playCurrentVideo();
+      };
+    });
+  </script>
+
+</body>
+</html>
