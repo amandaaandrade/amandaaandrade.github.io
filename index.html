@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Dream Animatic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dream</title>
   <style>
     body {
       margin: 0;
@@ -12,16 +13,13 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
     }
 
     .hidden {
       display: none;
     }
 
-    #dreamImage,
-    #glowAnimation,
-    #videoPlayer {
+    #dreamImage, #glowAnimation, #videoPlayer {
       position: absolute;
       width: 540px;
       height: 207.5px;
@@ -30,31 +28,30 @@
     .glow-animation {
       background-image: url('dream-animatic-shots/title-glow.webp');
       background-size: cover;
-      animation: glow 2.5s forwards;
+      animation: glowEffect 2.5s linear 1;
       pointer-events: none;
     }
 
-    @keyframes glow {
+    @keyframes glowEffect {
       0% { opacity: 0; }
-      50% { opacity: 1; }
+      25% { opacity: 1; }
+      75% { opacity: 1; }
       100% { opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <!-- Static Dream Image -->
+  <!-- Static Dream Title Image -->
   <img
     id="dreamImage"
     src="dream-animatic-shots/dream-title.png"
-    width="540"
-    height="207.5"
     alt="Dream Title"
   />
 
-  <!-- Glowing WebP Animation (Initially hidden) -->
+  <!-- Glowing WebP Animation -->
   <div id="glowAnimation" class="glow-animation hidden"></div>
 
-  <!-- Video Player for main videos -->
+  <!-- Video Player for dream animations -->
   <video id="videoPlayer" class="hidden" playsinline muted></video>
 
   <script>
@@ -62,66 +59,55 @@
     const glowAnimation = document.getElementById("glowAnimation");
     const videoElement = document.getElementById("videoPlayer");
 
-    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
-    let videoFiles = [...videoFilesOriginal];
+    const videoFiles = ["dream-1.mp4", "dream-2.mp4"];
     let currentIndex = 0;
     const folderPath = "dream-animatic-shots/";
 
-    // Hover to play glow animation once
+    // Hover = play glow effect
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.classList.add("hidden");
       glowAnimation.classList.remove("hidden");
     });
 
-    // When glow animation ends, return to static image
     glowAnimation.addEventListener("animationend", () => {
       glowAnimation.classList.add("hidden");
       dreamImage.classList.remove("hidden");
     });
 
-    // Shuffle array utility
-    function shuffleArray(array) {
+    // Shuffle video array
+    function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
 
-    shuffleArray(videoFiles);
+    shuffle(videoFiles);
 
-    // Play current video
-    function playCurrentVideo() {
-      if (currentIndex >= videoFiles.length) {
-        shuffleArray(videoFiles);
-        currentIndex = 0;
-      }
-
-      const videoPath = folderPath + videoFiles[currentIndex];
-      videoElement.src = videoPath;
-      videoElement.load();
-      videoElement.play().catch((err) =>
-        console.error("Video autoplay failed:", err)
-      );
-    }
-
-    // Click to start video playback
+    // Play video on click
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
       videoElement.classList.remove("hidden");
       playCurrentVideo();
     });
 
-    // Advance to next video
-    videoElement.onended = () => {
-      currentIndex++;
-      playCurrentVideo();
-    };
+    function playCurrentVideo() {
+      const file = videoFiles[currentIndex];
+      videoElement.src = folderPath + file;
+      videoElement.load();
+      videoElement.play().catch((e) => console.error("Playback failed:", e));
+    }
 
-    videoElement.onerror = () => {
-      console.error("Error loading video, skipping to next.");
-      currentIndex++;
+    videoElement.addEventListener("ended", () => {
+      currentIndex = (currentIndex + 1) % videoFiles.length;
       playCurrentVideo();
-    };
+    });
+
+    videoElement.addEventListener("error", () => {
+      console.error("Video error, skipping...");
+      currentIndex = (currentIndex + 1) % videoFiles.length;
+      playCurrentVideo();
+    });
   </script>
 </body>
 </html>
