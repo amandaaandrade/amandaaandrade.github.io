@@ -24,7 +24,7 @@
 
     #dreamImage {
       display: block;
-      margin: 20px auto 0;
+      margin: 0 auto;
       width: 540px;
       height: 207.5px;
       transition: transform 0.3s ease;
@@ -91,6 +91,7 @@
 
     const dreamImage = document.getElementById("dreamImage");
     dreamImage.addEventListener("click", () => {
+      dreamImage.classList.add("hidden"); // Hide the image (button)
       videoElement.classList.remove("hidden");
       playCurrentVideo();
 
