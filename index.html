@@ -50,4 +50,154 @@
     #glowBehindTitle.glow {
       background: radial-gradient(
         circle,
-        rgba(254, 57, 255, 0
+        rgba(254, 57, 255, 0.25) 0%,
+        rgba(254, 57, 255, 0.08) 50%,
+        rgba(0, 0, 0, 0) 90%
+      );
+    }
+
+    #dreamImage {
+      width: 540px;
+      height: 207.5px;
+      transition: transform 0.3s ease;
+      z-index: 2;
+      position: relative;
+    }
+
+    #dreamImage:hover {
+      transform: scale(0.95);
+    }
+
+    #videoPlayer {
+      position: absolute;
+      width: 80vw;
+      height: auto;
+      border-radius: 15px;
+      z-index: 10;
+    }
+
+    #spotlightOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 5;
+      background: radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        rgba(0, 0, 0, 0) 50px,
+        rgba(0, 0, 0, 0.8) 150px
+      );
+      transition: background 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Glowing Dream Title -->
+  <div id="dreamContainer">
+    <div id="glowBehindTitle"></div>
+    <img
+      id="dreamImage"
+      src="dream-animatic-shots/dream-title.png"
+      alt="Dream Title"
+    />
+  </div>
+
+  <!-- Spotlight Effect Overlay -->
+  <div id="spotlightOverlay"></div>
+
+  <!-- Main Video Player -->
+  <video id="videoPlayer" class="hidden" playsinline></video>
+
+  <script>
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
+    let videoFiles = [...videoFilesOriginal];
+    let currentIndex = 0;
+
+    const videoElement = document.getElementById("videoPlayer");
+    const dreamImage = document.getElementById("dreamImage");
+    const spotlight = document.getElementById("spotlightOverlay");
+    const glowBehindTitle = document.getElementById("glowBehindTitle");
+    const folderPath = "dream-animatic-shots/";
+
+    const stillImage = folderPath + "dream-title.png";
+    const glowGif = folderPath + "dream-title-glow.gif";
+
+    // ✨ Cursor spotlight tracking
+    document.addEventListener("mousemove", (e) => {
+      spotlight.style.setProperty("--x", e.clientX + "px");
+      spotlight.style.setProperty("--y", e.clientY + "px");
+    });
+
+    // ✨ Swap to glow gif on hover, illuminate background
+    dreamImage.addEventListener("mouseenter", () => {
+      dreamImage.src = glowGif;
+      spotlight.style.background = "rgba(0, 0, 0, 0)";
+      glowBehindTitle.style.opacity = 1;
+
+      // Add glow class for pink effect
+      glowBehindTitle.classList.add("glow");
+
+      // Revert back to white after 1 second
+      setTimeout(() => {
+        glowBehindTitle.classList.remove("glow");
+      }, 1000);
+    });
+
+    dreamImage.addEventListener("mouseleave", () => {
+      dreamImage.src = stillImage;
+      glowBehindTitle.style.opacity = 0;
+      spotlight.style.background = `radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        rgba(0, 0, 0, 0) 50px,
+        rgba(0, 0, 0, 0.8) 150px
+      )`;
+    });
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    shuffleArray(videoFiles);
+
+    function playCurrentVideo() {
+      if (currentIndex >= videoFiles.length) {
+        shuffleArray(videoFiles);
+        currentIndex = 0;
+      }
+
+      const videoPath = folderPath + videoFiles[currentIndex];
+      videoElement.src = videoPath;
+      videoElement.load();
+
+      videoElement.play().catch(err =>
+        console.error("Video autoplay failed:", err)
+      );
+    }
+
+    dreamImage.addEventListener("click", () => {
+      dreamImage.classList.add("hidden");
+      document.getElementById("glowBehindTitle").classList.add("hidden");
+      videoElement.classList.remove("hidden");
+      spotlight.classList.add("hidden");
+      playCurrentVideo();
+
+      videoElement.onended = () => {
+        currentIndex++;
+        playCurrentVideo();
+      };
+
+      videoElement.onerror = () => {
+        console.error("Error loading video, skipping to next.");
+        currentIndex++;
+        playCurrentVideo();
+      };
+    });
+  </script>
+</body>
+</html>
