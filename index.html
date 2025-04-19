@@ -5,74 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dream Project</title>
   <style>
-    body, html {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
+      font-family: sans-serif;
       background: url('bg.png') no-repeat center center fixed;
       background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: sans-serif;
-    }
-
-    #start-button {
-      padding: 16px 32px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      background-color: white;
-      color: black;
-      cursor: pointer;
-      z-index: 10;
-      position: absolute;
-    }
-
-    #content {
-      display: none;
+      color: white;
       text-align: center;
-      max-width: 800px;
-      width: 90%;
+    }
+    .container {
       background-color: rgba(0, 0, 0, 0.6);
       padding: 20px;
-      color: white;
-      border-radius: 10px;
+      max-width: 800px;
+      margin: 0 auto;
     }
-
-    #content video {
-      width: 100%;
-      max-width: 100%;
-      margin-bottom: 40px;
-    }
-
-    #content img {
+    img.title {
       max-width: 100%;
       height: auto;
       margin-bottom: 20px;
     }
+    video {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 40px;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <img src="dream-title.png" alt="Dream Title" class="title" />
 
-  <button id="start-button" onclick="startDream()">Start Dream</button>
-
-  <div id="content">
-    <img src="dream-title.png" alt="Dream Title">
     <video controls>
       <source src="dream-1.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
     </video>
+
     <video controls>
       <source src="dream-2.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
     </video>
   </div>
-
-  <script>
-    function startDream() {
-      document.getElementById("start-button").style.display = "none";
-      document.getElementById("content").style.display = "block";
-    }
-  </script>
-
 </body>
 </html>
