@@ -1,65 +1,107 @@
-<script>
-  const videoFilesOriginal = [
-    "dream-1.mp4", "dream-2.mp4"
-  ];
-
-  let videoFiles = [...videoFilesOriginal];
-  let currentIndex = 0;
-  const videoElement = document.getElementById("videoPlayer");
-  const dreamImage = document.getElementById("dreamImage");
-  const folderPath = "dream-animatic-shots/";
-
-  const stillImage = folderPath + "dream-title.png";
-  const glowGif = folderPath + "dream-title-glow.gif";
-
-  // Swap to glowing gif on hover
-  dreamImage.addEventListener("mouseenter", () => {
-    dreamImage.src = glowGif;
-  });
-
-  // Swap back when not hovering
-  dreamImage.addEventListener("mouseleave", () => {
-    dreamImage.src = stillImage;
-  });
-
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  shuffleArray(videoFiles);
-
-  function playCurrentVideo() {
-    if (currentIndex >= videoFiles.length) {
-      shuffleArray(videoFiles);
-      currentIndex = 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dream</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('dream-animatic-shots/bg-no-glow.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    const videoPath = folderPath + videoFiles[currentIndex];
-    videoElement.src = videoPath;
-    videoElement.load();
+    .hidden {
+      display: none;
+    }
 
-    videoElement.play().catch(err =>
-      console.error("Video autoplay failed:", err)
-    );
-  }
+    #dreamImage, #videoPlayer {
+      position: absolute;
+      width: 540px;
+      height: 207.5px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Static/Glowing Dream Image -->
+  <img
+    id="dreamImage"
+    src="dream-animatic-shots/dream-title.png"
+    alt="Dream Title"
+  />
 
-  dreamImage.addEventListener("click", () => {
-    dreamImage.classList.add("hidden");
-    videoElement.classList.remove("hidden");
-    playCurrentVideo();
+  <!-- Main Video Player -->
+  <video id="videoPlayer" class="hidden" playsinline muted></video>
 
-    videoElement.onended = () => {
-      currentIndex++;
+  <script>
+    const videoFilesOriginal = [
+      "dream-1.mp4", "dream-2.mp4"
+    ];
+
+    let videoFiles = [...videoFilesOriginal];
+    let currentIndex = 0;
+    const videoElement = document.getElementById("videoPlayer");
+    const dreamImage = document.getElementById("dreamImage");
+    const folderPath = "dream-animatic-shots/";
+
+    const stillImage = folderPath + "dream-title.png";
+    const glowGif = folderPath + "dream-title-glow.gif";
+
+    // Swap to glowing gif on hover
+    dreamImage.addEventListener("mouseenter", () => {
+      dreamImage.src = glowGif;
+    });
+
+    // Swap back when not hovering
+    dreamImage.addEventListener("mouseleave", () => {
+      dreamImage.src = stillImage;
+    });
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    shuffleArray(videoFiles);
+
+    function playCurrentVideo() {
+      if (currentIndex >= videoFiles.length) {
+        shuffleArray(videoFiles);
+        currentIndex = 0;
+      }
+
+      const videoPath = folderPath + videoFiles[currentIndex];
+      videoElement.src = videoPath;
+      videoElement.load();
+
+      videoElement.play().catch(err =>
+        console.error("Video autoplay failed:", err)
+      );
+    }
+
+    dreamImage.addEventListener("click", () => {
+      dreamImage.classList.add("hidden");
+      videoElement.classList.remove("hidden");
       playCurrentVideo();
-    };
 
-    videoElement.onerror = () => {
-      console.error("Error loading video, skipping to next.");
-      currentIndex++;
-      playCurrentVideo();
-    };
-  });
-</script>
+      videoElement.onended = () => {
+        currentIndex++;
+        playCurrentVideo();
+      };
+
+      videoElement.onerror = () => {
+        console.error("Error loading video, skipping to next.");
+        currentIndex++;
+        playCurrentVideo();
+      };
+    });
+  </script>
+</body>
+</html>
