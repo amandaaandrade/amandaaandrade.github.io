@@ -8,24 +8,15 @@
     alt="Dream Title"
   />
 
-  <!-- Glowing Video Animation (Initially hidden) -->
-  <video
-    id="glowVideo"
-    class="hidden"
-    width="540"
-    height="207.5"
-    muted
-    playsinline
-  >
-    <source src="dream-animatic-shots/dream-title-glow.mov" type="video/quicktime" />
-  </video>
+  <!-- Glowing WebP Animation (Initially hidden) -->
+  <div id="glowAnimation" class="glow-animation hidden"></div>
 
   <!-- Video Player for main videos -->
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
     const dreamImage = document.getElementById("dreamImage");
-    const glowVideo = document.getElementById("glowVideo");
+    const glowAnimation = document.getElementById("glowAnimation");
     const videoElement = document.getElementById("videoPlayer");
 
     const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
@@ -36,14 +27,12 @@
     // Hover to play glow animation once
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.classList.add("hidden");
-      glowVideo.classList.remove("hidden");
-      glowVideo.currentTime = 0;
-      glowVideo.play();
+      glowAnimation.classList.remove("hidden");
     });
 
-    // Once the glow video finishes, hide the glow video, then show the image again
-    glowVideo.addEventListener("ended", () => {
-      glowVideo.classList.add("hidden");
+    // Once the glow animation ends, hide the glow and show the image again
+    glowAnimation.addEventListener("animationend", () => {
+      glowAnimation.classList.add("hidden");
       dreamImage.classList.remove("hidden");
     });
 
@@ -51,43 +40,4 @@
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-
-    shuffleArray(videoFiles);
-
-    function playCurrentVideo() {
-      if (currentIndex >= videoFiles.length) {
-        shuffleArray(videoFiles);
-        currentIndex = 0;
-      }
-
-      const videoPath = folderPath + videoFiles[currentIndex];
-      videoElement.src = videoPath;
-      videoElement.load();
-      videoElement.play().catch((err) =>
-        console.error("Video autoplay failed:", err)
-      );
-    }
-
-    dreamImage.addEventListener("click", () => {
-      dreamImage.classList.add("hidden");
-      videoElement.classList.remove("hidden");
-      playCurrentVideo();
-    });
-
-    videoElement.onended = () => {
-      currentIndex++;
-      playCurrentVideo();
-    };
-
-    videoElement.onerror = () => {
-      console.error("Error loading video, skipping to next.");
-      currentIndex++;
-      playCurrentVideo();
-    };
-  </script>
-
-  <style>
-    /* Styling for the*
+        [array[i],
