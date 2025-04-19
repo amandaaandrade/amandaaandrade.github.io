@@ -51,7 +51,6 @@
 
   <!-- Main Video Player -->
   <video id="videoPlayer" class="hidden" playsinline></video>
-  
 
   <!-- ⬇️ Script moved down here ⬇️ -->
   <script>
@@ -117,6 +116,22 @@
         currentIndex++;
         playCurrentVideo();
       };
+    });
+
+    // Reverse video playback on mouse leave
+    dreamImage.addEventListener('mouseleave', () => {
+      videoElement.pause();
+      videoElement.currentTime = videoElement.duration; // Go to the last frame
+      videoElement.playbackRate = -1; // Reverse playback
+      videoElement.play();
+    });
+
+    // Normal playback when mouse enters
+    dreamImage.addEventListener('mouseenter', () => {
+      videoElement.pause();
+      videoElement.currentTime = 0; // Reset to start
+      videoElement.playbackRate = 1; // Normal playback
+      videoElement.play();
     });
   </script>
 </body>
