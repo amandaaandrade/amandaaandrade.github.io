@@ -23,26 +23,21 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      transition: background 0.3s ease-in-out; /* Smooth transition for background */
     }
 
     #dreamImage {
       display: block;
       width: 540px;
       height: 207.5px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add glow effect to the image */
+      transition: transform 0.3s ease, box-shadow 0.3s ease; /* Adding transition for box-shadow */
       cursor: pointer;
       z-index: 10;
     }
 
+    /* Hover effect for the glow */
     #dreamImage:hover {
       transform: scale(0.95);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Glow effect on hover */
-    }
-
-    body:hover {
-      background-color: rgb(61, 61, 61); /* Optional: Keep background color the same */
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Subtle glow around the whole page */
+      box-shadow: 0 0 15px 5px rgba(0, 255, 0, 0.8); /* Green glow effect */
     }
 
     video {
