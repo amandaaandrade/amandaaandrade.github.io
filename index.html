@@ -5,31 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Project Dream</title>
   <style>
-    body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-      background-color: rgb(61, 61, 61);
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      background-image: url('dream-animatic-shots/bg.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      height: 100vh;
+    }
+
+    body {
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: rgb(61, 61, 61);
+      background-image: url('dream-animatic-shots/bg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     #dreamImage {
       display: block;
-      margin: 0 auto;
       width: 540px;
       height: 207.5px;
       transition: transform 0.3s ease;
       cursor: pointer;
-      z-index: 10; /* Ensure button stays on top */
+      z-index: 10;
     }
 
     #dreamImage:hover {
@@ -41,9 +43,8 @@
       max-width: 900px;
       height: auto;
       object-fit: contain;
-      margin: 20px auto;
-      display: block;
-      border-radius: 15px; /* Rounded corners for the video */
+      border-radius: 15px;
+      flex-shrink: 0;
     }
 
     .hidden {
@@ -65,6 +66,7 @@
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
     const videoElement = document.getElementById("videoPlayer");
+    const dreamImage = document.getElementById("dreamImage");
     const folderPath = "dream-animatic-shots/";
 
     function shuffleArray(array) {
@@ -91,9 +93,8 @@
       );
     }
 
-    const dreamImage = document.getElementById("dreamImage");
     dreamImage.addEventListener("click", () => {
-      dreamImage.classList.add("hidden"); // Hide the image (button)
+      dreamImage.classList.add("hidden");
       videoElement.classList.remove("hidden");
       playCurrentVideo();
 
