@@ -3,106 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Project Dream</title>
+  <title>Dream Project</title>
   <style>
     body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-      background-color: rgb(61, 61, 61);
       margin: 0;
-      padding: 0;
-      background-image: url('dream-animatic-shots/bg.png');
+      font-family: sans-serif;
+      background: url('bg.png') no-repeat center center fixed;
       background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      color: white;
+      text-align: center;
     }
-
-    #dreamImage {
-      margin-top: 40px;
-      width: 540px;
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    img.title {
+      max-width: 100%;
       height: auto;
-      cursor: pointer;
-      transition: transform 0.3s ease;
+      margin-bottom: 20px;
     }
-
-    #dreamImage:hover {
-      transform: scale(0.95);
-    }
-
     video {
-      width: 80%;
-      max-width: 900px;
-      height: auto;
-      object-fit: contain;
-      margin: 30px auto;
-      display: none;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 40px;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <img src="dream-title.png" alt="Dream Title" class="title" />
 
-  <!-- Button image -->
-  <img id="dreamImage" src="dream-animatic-shots/dream-title.png" alt="Dream Title Button" />
+    <video controls>
+      <source src="dream-1.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
 
-  <!-- Video player -->
-  <video id="videoPlayer" playsinline></video>
-
-  <script>
-    const videoFiles = ["dream-1.mp4", "dream-2.mp4"];
-    const folderPath = "dream-animatic-shots/";
-    const videoElement = document.getElementById("videoPlayer");
-    const dreamImage = document.getElementById("dreamImage");
-
-    let shuffledVideos = [];
-    let currentIndex = 0;
-
-    function shuffleVideos() {
-      shuffledVideos = [...videoFiles];
-      for (let i = shuffledVideos.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledVideos[i], shuffledVideos[j]] = [shuffledVideos[j], shuffledVideos[i]];
-      }
-      currentIndex = 0;
-    }
-
-    function playVideo() {
-      if (currentIndex >= shuffledVideos.length) {
-        shuffleVideos();
-      }
-
-      const currentVideo = folderPath + shuffledVideos[currentIndex];
-      videoElement.src = currentVideo;
-      videoElement.load();
-      videoElement.play().catch(err => {
-        console.error("Autoplay failed:", err);
-      });
-    }
-
-    dreamImage.addEventListener("click", () => {
-      dreamImage.style.display = "none";
-      videoElement.style.display = "block";
-      shuffleVideos();
-      playVideo();
-    });
-
-    videoElement.onended = () => {
-      currentIndex++;
-      playVideo();
-    };
-
-    videoElement.onerror = () => {
-      console.error("Error playing video. Skipping.");
-      currentIndex++;
-      playVideo();
-    };
-  </script>
-
+    <video controls>
+      <source src="dream-2.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
 </body>
 </html>
