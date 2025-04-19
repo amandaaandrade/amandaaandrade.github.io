@@ -20,28 +20,46 @@
       display: none;
     }
 
-    /* Adjust size and center */
+    #spotlightOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 5;
+      background: radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        rgba(0, 0, 0, 0) 100px,
+        rgba(0, 0, 0, 0.6) 250px
+      );
+      transition: background 0.3s ease;
+    }
+
     #dreamImage, #videoPlayer {
       position: absolute;
       width: 540px;
       height: 207.5px;
-      transition: transform 0.3s ease;  /* Smooth transition for scaling */
+      transition: transform 0.3s ease;
+      z-index: 10;
     }
 
-    /* Shrink the image on hover */
     #dreamImage:hover {
-      transform: scale(0.95);  /* Slightly shrink the image */
+      transform: scale(0.95);
     }
 
-    /* Full-screen video scaling when played (80% size) */
     #videoPlayer {
-      width: 80vw;  /* 80% of viewport width */
-      height: auto;  /* Maintain aspect ratio */
+      width: 80vw;
+      height: auto;
       border-radius: 15px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Spotlight Effect Overlay -->
+  <div id="spotlightOverlay"></div>
+
   <!-- Static/Glowing Dream Image -->
   <img
     id="dreamImage"
@@ -51,31 +69,39 @@
 
   <!-- Main Video Player -->
   <video id="videoPlayer" class="hidden" playsinline></video>
-  
 
-  <!-- ⬇️ Script moved down here ⬇️ -->
   <script>
-    const videoFilesOriginal = [
-      "dream-1.mp4", "dream-2.mp4"
-    ];
-
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
+
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
+    const spotlight = document.getElementById("spotlightOverlay");
     const folderPath = "dream-animatic-shots/";
 
     const stillImage = folderPath + "dream-title.png";
     const glowGif = folderPath + "dream-title-glow.gif";
 
-    // Swap to glowing gif on hover
-    dreamImage.addEventListener("mouseenter", () => {
-      dreamImage.src = glowGif;
+    // ✨ Cursor spotlight tracking
+    document.addEventListener("mousemove", (e) => {
+      spotlight.style.setProperty("--x", e.clientX + "px");
+      spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
-    // Swap back when not hovering
+    // ✨ Swap to glow gif on hover
+    dreamImage.addEventListener("mouseenter", () => {
+      dreamImage.src = glowGif;
+      spotlight.style.background = "rgba(0, 0, 0, 0)"; // removes fog
+    });
+
     dreamImage.addEventListener("mouseleave", () => {
       dreamImage.src = stillImage;
+      spotlight.style.background = `radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        rgba(0, 0, 0, 0) 100px,
+        rgba(0, 0, 0, 0.6) 250px
+      )`;
     });
 
     function shuffleArray(array) {
@@ -105,6 +131,7 @@
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
       videoElement.classList.remove("hidden");
+      spotlight.classList.add("hidden"); // Hide spotlight when video starts
       playCurrentVideo();
 
       videoElement.onended = () => {
@@ -121,4 +148,3 @@
   </script>
 </body>
 </html>
-
