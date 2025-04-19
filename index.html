@@ -11,7 +11,7 @@
       background-color: rgb(61, 61, 61);
       margin: 0;
       padding: 0;
-      background-image: url('Dream Animatic shots/bg.png');
+      background-image: url('dream-animatic-shots/bg.png'); /* only if you have this image */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -19,9 +19,10 @@
     }
 
     .video-container {
-      display: none;
+      display: flex;
       justify-content: center;
-      margin-top: 20px;
+      align-items: center;
+      height: 100%;
     }
 
     video {
@@ -29,45 +30,16 @@
       max-width: 900px;
       height: auto;
     }
-
-    .start-button {
-      margin-top: 200px;
-      padding: 15px 30px;
-      font-size: 18px;
-      cursor: pointer;
-      background-color: #ffffff;
-      border: none;
-      border-radius: 10px;
-      transition: 0.3s;
-    }
-
-    .start-button:hover {
-      background-color: #ccc;
-    }
   </style>
 </head>
 <body>
 
-  <button class="start-button" onclick="startVideo()">Start Video</button>
-
-  <div class="video-container" id="videoContainer">
-    <video id="videoPlayer" controls>
-      <source src="https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/main/Dream%20Animatic%20shots/Open%20Type%20Submission.mp4" type="video/mp4">
+  <div class="video-container">
+    <video controls>
+      <source src="https://amandaaandrade.github.io/dream-animatic-shots/dream-1.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
-
-  <script>
-    function startVideo() {
-      document.querySelector('.start-button').style.display = 'none';
-      const container = document.getElementById('videoContainer');
-      container.style.display = 'flex';
-      const video = document.getElementById('videoPlayer');
-      video.play().catch(err => {
-        console.error("Autoplay failed:", err);
-      });
-    }
-  </script>
 
 </body>
 </html>
