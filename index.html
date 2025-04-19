@@ -5,47 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dream Project</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body, html {
       margin: 0;
       padding: 0;
       height: 100%;
       background: url('bg.png') no-repeat center center fixed;
       background-size: cover;
-      font-family: sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-family: sans-serif;
     }
 
-    .container {
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 20px;
-      text-align: center;
-      color: white;
-      max-width: 800px;
-      width: 90%;
-      display: none; /* hide video container until button is clicked */
-    }
-
-    img.title {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 20px;
-    }
-
-    video {
-      width: 100%;
-      max-width: 100%;
-      margin-bottom: 40px;
-    }
-
-    .start-button {
-      position: absolute;
-      z-index: 10;
+    #start-button {
       padding: 16px 32px;
       font-size: 18px;
       border: none;
@@ -53,36 +25,52 @@
       background-color: white;
       color: black;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      z-index: 10;
+      position: absolute;
     }
 
-    .start-button:hover {
-      transform: scale(1.05);
+    #content {
+      display: none;
+      text-align: center;
+      max-width: 800px;
+      width: 90%;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      color: white;
+      border-radius: 10px;
+    }
+
+    #content video {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 40px;
+    }
+
+    #content img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-  <button class="start-button" onclick="startExperience()">Start Dream</button>
+  <button id="start-button" onclick="startDream()">Start Dream</button>
 
-  <div class="container" id="videoContainer">
-    <img src="dream-title.png" alt="Dream Title" class="title" />
-
+  <div id="content">
+    <img src="dream-title.png" alt="Dream Title">
     <video controls>
       <source src="dream-1.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
     </video>
-
     <video controls>
       <source src="dream-2.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
     </video>
   </div>
 
   <script>
-    function startExperience() {
-      document.querySelector('.start-button').style.display = 'none';
-      document.getElementById('videoContainer').style.display = 'block';
+    function startDream() {
+      document.getElementById("start-button").style.display = "none";
+      document.getElementById("content").style.display = "block";
     }
   </script>
 
