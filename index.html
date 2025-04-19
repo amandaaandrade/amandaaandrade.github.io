@@ -18,90 +18,55 @@
       height: 100vh;
     }
 
-    #dreamImage {
-      display: block;
-      margin: 20px auto 0;
-      width: 540px;
-      height: 207.5px;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-
-    #dreamImage:hover {
-      transform: scale(0.95);
+    .video-container {
+      display: none;
+      justify-content: center;
+      margin-top: 20px;
     }
 
     video {
       width: 80%;
       max-width: 900px;
       height: auto;
-      object-fit: contain;
-      margin: 20px auto;
-      display: block;
     }
 
-    .hidden {
-      display: none;
+    .start-button {
+      margin-top: 200px;
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .start-button:hover {
+      background-color: #ccc;
     }
   </style>
 </head>
 <body>
 
-  <img id="dreamImage" src="Dream Animatic shots/Dream title.png" width="540" height="207.5" alt="Dream Title" />
+  <button class="start-button" onclick="startVideo()">Start Video</button>
 
-  <video id="videoPlayer" class="hidden" playsinline></video>
+  <div class="video-container" id="videoContainer">
+    <video id="videoPlayer" controls>
+      <source src="https://raw.githubusercontent.com/amandaaandrade/amandaaandrade.github.io/main/Dream%20Animatic%20shots/Open%20Type%20Submission.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <script>
-    const videoFilesOriginal = [
-      "Open Type Submission.mp4", "DREAM EYE SHOT.mp4","drean comp.mp4"
-      
-    ];
-
-    let videoFiles = [...videoFilesOriginal];
-    let currentIndex = 0;
-    const videoElement = document.getElementById("videoPlayer");
-    const folderPath = "Dream Animatic shots/";
-
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+    function startVideo() {
+      document.querySelector('.start-button').style.display = 'none';
+      const container = document.getElementById('videoContainer');
+      container.style.display = 'flex';
+      const video = document.getElementById('videoPlayer');
+      video.play().catch(err => {
+        console.error("Autoplay failed:", err);
+      });
     }
-
-    shuffleArray(videoFiles);
-
-    function playCurrentVideo() {
-      if (currentIndex >= videoFiles.length) {
-        shuffleArray(videoFiles);
-        currentIndex = 0;
-      }
-
-      const videoPath = folderPath + videoFiles[currentIndex];
-      videoElement.src = videoPath;
-      videoElement.load();
-
-      videoElement.play().catch(err =>
-        console.error("Video autoplay failed:", err)
-      );
-    }
-
-    const dreamImage = document.getElementById("dreamImage");
-    dreamImage.addEventListener("click", () => {
-      videoElement.classList.remove("hidden");
-      playCurrentVideo();
-
-      videoElement.onended = () => {
-        currentIndex++;
-        playCurrentVideo();
-      };
-
-      videoElement.onerror = () => {
-        console.error("Error loading video, skipping to next.");
-        currentIndex++;
-        playCurrentVideo();
-      };
-    });
   </script>
 
 </body>
