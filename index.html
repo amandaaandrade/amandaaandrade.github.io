@@ -39,9 +39,9 @@
         rgba(255, 255, 255, 0.08) 50%,
         rgba(0, 0, 0, 0) 90%
       );
-      filter: blur(100px);
+      filter: blur(80px);
       opacity: 0;
-      transition: all 1.2s ease;
+      transition: background 1.2s ease, opacity 1.2s ease;
       z-index: 0;
       pointer-events: none;
     }
@@ -54,7 +54,6 @@
         rgba(0, 0, 0, 0) 90%
       );
       opacity: 1;
-      transition: all 1.2s ease;
     }
 
     #glowBehindTitle.after-glow {
@@ -64,9 +63,17 @@
         rgba(255, 255, 255, 0.03) 50%,
         rgba(0, 0, 0, 0) 90%
       );
-      filter: blur(60px);
       opacity: 1;
-      transition: all 1.2s ease;
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.85;
+      }
     }
 
     #dreamImage {
