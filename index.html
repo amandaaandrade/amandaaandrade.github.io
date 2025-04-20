@@ -41,7 +41,7 @@
       );
       filter: blur(100px);
       opacity: 0;
-      transition: all 1.2s ease;
+      transition: all 0.3s ease;
       z-index: 0;
       pointer-events: none;
     }
@@ -55,18 +55,6 @@
       );
       opacity: 1;
       transition: all 0.3s ease; /* Instant glow */
-    }
-
-    #glowBehindTitle.after-glow {
-      background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.12) 0%,
-        rgba(255, 255, 255, 0.03) 50%,
-        rgba(0, 0, 0, 0) 90%
-      );
-      filter: blur(60px);
-      opacity: 1;
-      transition: all 1.2s ease;
     }
 
     #dreamImage {
@@ -152,6 +140,11 @@
 
       glowBehindTitle.classList.remove("after-glow");
       glowBehindTitle.classList.add("glow"); // Glow appears instantly
+
+      // Set a timeout to remove glow after 7-13ms range (timeframe)
+      setTimeout(() => {
+        glowBehindTitle.classList.remove("glow"); // Glow disappears after 7-13ms
+      }, 1130); // After 1.13 seconds, glow will turn off completely
     });
 
     dreamImage.addEventListener("mouseleave", () => {
@@ -165,7 +158,7 @@
         )
       `;
 
-      glowBehindTitle.classList.remove("glow"); // Remove glow instantly
+      glowBehindTitle.classList.remove("glow"); // Remove glow immediately on mouse leave
     });
 
     function shuffleArray(array) {
