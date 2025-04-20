@@ -47,22 +47,17 @@
     }
 
     #glowBehindTitle.glow {
-      width: 1400px;
-      height: 600px;
       background: radial-gradient(
         circle,
         rgba(254, 57, 255, 0.25) 0%,
         rgba(254, 57, 255, 0.08) 50%,
         rgba(0, 0, 0, 0) 90%
       );
-      filter: blur(100px);
       opacity: 1;
       transition: all 1.2s ease;
     }
 
     #glowBehindTitle.after-glow {
-      width: 800px;
-      height: 300px;
       background: radial-gradient(
         circle,
         rgba(255, 255, 255, 0.12) 0%,
@@ -161,7 +156,7 @@
       setTimeout(() => {
         glowBehindTitle.classList.remove("glow");
         glowBehindTitle.classList.add("after-glow");
-      }, 1500); // 1.5s instead of 1s
+      }, 1500);
     });
 
     dreamImage.addEventListener("mouseleave", () => {
@@ -172,7 +167,6 @@
         rgba(0, 0, 0, 0.8) 150px
       )`;
 
-      // Remove glow after fade
       setTimeout(() => {
         glowBehindTitle.classList.remove("after-glow");
         glowBehindTitle.classList.remove("glow");
@@ -205,7 +199,7 @@
 
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
-      document.getElementById("glowBehindTitle").classList.add("hidden");
+      glowBehindTitle.classList.add("hidden");
       videoElement.classList.remove("hidden");
       spotlight.classList.add("hidden");
       playCurrentVideo();
