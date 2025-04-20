@@ -75,6 +75,7 @@
       transition: transform 0.3s ease;
       z-index: 2;
       position: relative;
+      cursor: pointer;
     }
 
     #dreamImage:hover {
@@ -125,7 +126,7 @@
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
-    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4","dream-3.pm4];
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4", "dream-3.mp4"];
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
 
@@ -149,10 +150,9 @@
       dreamImage.src = glowGif;
       spotlight.style.background = "rgba(0, 0, 0, 0)";
 
-      glowBehindTitle.classList.remove("after-glow"); // Reset any lingering white glow
+      glowBehindTitle.classList.remove("after-glow");
       glowBehindTitle.classList.add("glow");
 
-      // Wait a little longer before transitioning to white glow
       setTimeout(() => {
         glowBehindTitle.classList.remove("glow");
         glowBehindTitle.classList.add("after-glow");
@@ -161,11 +161,14 @@
 
     dreamImage.addEventListener("mouseleave", () => {
       dreamImage.src = stillImage;
-      spotlight.style.background = radial-gradient(
-        circle at var(--x, 50%) var(--y, 50%),
-        rgba(0, 0, 0, 0) 50px,
-        rgba(0, 0, 0, 0.8) 150px
-      );
+
+      spotlight.style.background = `
+        radial-gradient(
+          circle at var(--x, 50%) var(--y, 50%),
+          rgba(0, 0, 0, 0) 50px,
+          rgba(0, 0, 0, 0.8) 150px
+        )
+      `;
 
       setTimeout(() => {
         glowBehindTitle.classList.remove("after-glow");
