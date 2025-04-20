@@ -41,19 +41,37 @@
       );
       filter: blur(100px);
       opacity: 0;
-      transition: opacity 0.5s ease, background 1s ease;
+      transition: all 1s ease;
       z-index: 0;
       pointer-events: none;
     }
 
     /* Pink glow class */
     #glowBehindTitle.glow {
+      width: 1400px;
+      height: 600px;
       background: radial-gradient(
         circle,
         rgba(254, 57, 255, 0.25) 0%,
         rgba(254, 57, 255, 0.08) 50%,
         rgba(0, 0, 0, 0) 90%
       );
+      filter: blur(100px);
+      opacity: 1;
+    }
+
+    /* Smaller white glow class */
+    #glowBehindTitle.after-glow {
+      width: 800px;
+      height: 300px;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.03) 50%,
+        rgba(0, 0, 0, 0) 90%
+      );
+      filter: blur(60px);
+      opacity: 1;
     }
 
     #dreamImage {
@@ -135,25 +153,30 @@
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.src = glowGif;
       spotlight.style.background = "rgba(0, 0, 0, 0)";
-      glowBehindTitle.style.opacity = 1;
 
-      // Add glow class for pink effect
+      glowBehindTitle.classList.remove("after-glow"); // reset from last state
       glowBehindTitle.classList.add("glow");
 
-      // Revert back to white after 1 second
+      // After 1s, fade to smaller white glow
       setTimeout(() => {
         glowBehindTitle.classList.remove("glow");
-      }, 1500);
+        glowBehindTitle.classList.add("after-glow");
+      }, 1000);
     });
 
     dreamImage.addEventListener("mouseleave", () => {
       dreamImage.src = stillImage;
-      glowBehindTitle.style.opacity = 0;
       spotlight.style.background = `radial-gradient(
         circle at var(--x, 50%) var(--y, 50%),
         rgba(0, 0, 0, 0) 50px,
         rgba(0, 0, 0, 0.8) 150px
       )`;
+
+      // Remove glow after fade
+      setTimeout(() => {
+        glowBehindTitle.classList.remove("after-glow");
+        glowBehindTitle.classList.remove("glow");
+      }, 1000);
     });
 
     function shuffleArray(array) {
