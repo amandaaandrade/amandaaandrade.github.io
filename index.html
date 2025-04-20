@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+add it to this code <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -39,9 +39,9 @@
         rgba(255, 255, 255, 0.08) 50%,
         rgba(0, 0, 0, 0) 90%
       );
-      filter: blur(80px);
+      filter: blur(100px);
       opacity: 0;
-      transition: background 1.2s ease, opacity 1.2s ease;
+      transition: all 1.2s ease;
       z-index: 0;
       pointer-events: none;
     }
@@ -54,6 +54,7 @@
         rgba(0, 0, 0, 0) 90%
       );
       opacity: 1;
+      transition: all 1.2s ease;
     }
 
     #glowBehindTitle.after-glow {
@@ -63,17 +64,9 @@
         rgba(255, 255, 255, 0.03) 50%,
         rgba(0, 0, 0, 0) 90%
       );
+      filter: blur(60px);
       opacity: 1;
-      animation: pulseGlow 4s ease-in-out infinite;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.85;
-      }
+      transition: all 1.2s ease;
     }
 
     #dreamImage {
@@ -132,7 +125,7 @@
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
-    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4", "dream-3.mp4]";
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4"];
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
 
@@ -168,16 +161,16 @@
 
     dreamImage.addEventListener("mouseleave", () => {
       dreamImage.src = stillImage;
-      spotlight.style.background = `radial-gradient(
+      spotlight.style.background = radial-gradient(
         circle at var(--x, 50%) var(--y, 50%),
         rgba(0, 0, 0, 0) 50px,
         rgba(0, 0, 0, 0.8) 150px
-      )`;
+      );
 
       setTimeout(() => {
         glowBehindTitle.classList.remove("after-glow");
         glowBehindTitle.classList.remove("glow");
-      }, 100);
+      }, 1000);
     });
 
     function shuffleArray(array) {
