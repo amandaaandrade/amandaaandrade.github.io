@@ -41,12 +41,11 @@
       );
       filter: blur(100px);
       opacity: 0;
-      transition: all 1s ease;
+      transition: all 1.2s ease;
       z-index: 0;
       pointer-events: none;
     }
 
-    /* Pink glow class */
     #glowBehindTitle.glow {
       width: 1400px;
       height: 600px;
@@ -58,9 +57,9 @@
       );
       filter: blur(100px);
       opacity: 1;
+      transition: all 1.2s ease;
     }
 
-    /* Smaller white glow class */
     #glowBehindTitle.after-glow {
       width: 800px;
       height: 300px;
@@ -72,6 +71,7 @@
       );
       filter: blur(60px);
       opacity: 1;
+      transition: all 1.2s ease;
     }
 
     #dreamImage {
@@ -154,14 +154,14 @@
       dreamImage.src = glowGif;
       spotlight.style.background = "rgba(0, 0, 0, 0)";
 
-      glowBehindTitle.classList.remove("after-glow"); // reset from last state
+      glowBehindTitle.classList.remove("after-glow"); // Reset any lingering white glow
       glowBehindTitle.classList.add("glow");
 
-      // After 1s, fade to smaller white glow
+      // Wait a little longer before transitioning to white glow
       setTimeout(() => {
         glowBehindTitle.classList.remove("glow");
         glowBehindTitle.classList.add("after-glow");
-      }, 1000);
+      }, 1500); // 1.5s instead of 1s
     });
 
     dreamImage.addEventListener("mouseleave", () => {
