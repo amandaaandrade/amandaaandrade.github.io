@@ -61,7 +61,7 @@
     #dreamImage {
       width: 540px;
       height: 207.5px;
-      transition: transform 0.3s ease;
+      transition: transform 0.2s ease;
       z-index: 2;
       position: relative;
       cursor: pointer;
@@ -145,7 +145,7 @@
       // Set a timeout to remove glow after 1.13s
       setTimeout(() => {
         glowBehindTitle.classList.remove("glow");
-      }, 1130); // After 1.13 seconds, glow will turn off completely
+      }, 1000); // After 1.13 seconds, glow will turn off completely
     });
 
     dreamImage.addEventListener("mouseleave", () => {
