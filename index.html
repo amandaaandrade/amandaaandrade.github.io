@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dream</title>
+
   <link rel="icon" href="data:image/x-icon,;">
 
   <style>
@@ -25,6 +26,38 @@
     #dreamContainer {
       position: relative;
       z-index: 1;
+      width: 540px;
+      height: 207.5px;
+    }
+
+    #dreamImage {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 2;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    #dreamImage:hover {
+      transform: scale(0.95);
+    }
+
+    /* 🔥 WebM glow layer */
+    #glowVideo {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    /* show video on hover */
+    #dreamContainer:hover #glowVideo {
+      opacity: 1;
     }
 
     #glowBehindTitle {
@@ -35,46 +68,21 @@
       width: 1400px;
       height: 600px;
       border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0;
-      z-index: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
-    }
-
-    #glowBehindTitle.glow {
       background: radial-gradient(
         circle,
         rgba(254, 57, 255, 0.25) 0%,
         rgba(254, 57, 255, 0.08) 50%,
         rgba(0, 0, 0, 0) 90%
       );
-      opacity: 1;
-    }
-
-    #dreamImage {
-      width: 540px;
-      height: 207.5px;
-      position: relative;
-      z-index: 2;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    #dreamImage:hover {
-      transform: scale(0.95);
-    }
-
-    /* 👇 video sits EXACTLY on top */
-    #dreamVideo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 540px;
-      height: 207.5px;
-      display: none;
+      filter: blur(100px);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 0;
       pointer-events: none;
-      z-index: 2;
+    }
+
+    #dreamContainer:hover #glowBehindTitle {
+      opacity: 1;
     }
 
     #videoPlayer {
@@ -107,16 +115,21 @@
   <div id="dreamContainer">
     <div id="glowBehindTitle"></div>
 
-    <!-- ORIGINAL IMAGE -->
+    <!-- Base image (always visible) -->
     <img
       id="dreamImage"
       src="dream-animatic-shots/dream-title.png"
       alt="Dream Title"
     />
 
-    <!-- NEW WEBM -->
-    <video id="dreamVideo" muted playsinline preload="auto">
-      <source src="dream-animatic-shots/dream-title-glow-1.webm" type="video/webm">
+    <!-- 🔥 Always-playing WebM -->
+    <video
+      id="glowVideo"
+      src="dream-animatic-shots/dream-title-glow-1.webm"
+      autoplay
+      muted
+      loop
+      playsinline>
     </video>
   </div>
 
@@ -131,45 +144,13 @@
 
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
-    const dreamVideo = document.getElementById("dreamVideo");
     const spotlight = document.getElementById("spotlightOverlay");
-    const glowBehindTitle = document.getElementById("glowBehindTitle");
+
     const folderPath = "dream-animatic-shots/";
 
-    // spotlight tracking
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
       spotlight.style.setProperty("--y", e.clientY + "px");
-    });
-
-    // ✅ HOVER START (play once)
-    dreamImage.addEventListener("mouseenter", () => {
-      spotlight.style.background = "rgba(0, 0, 0, 0)";
-      glowBehindTitle.classList.add("glow");
-
-      dreamImage.style.visibility = "hidden";
-      dreamVideo.style.display = "block";
-
-      dreamVideo.currentTime = 0;
-      dreamVideo.play();
-    });
-
-    // ✅ when animation ends → reset
-    dreamVideo.addEventListener("ended", () => {
-      dreamVideo.style.display = "none";
-      dreamImage.style.visibility = "visible";
-      glowBehindTitle.classList.remove("glow");
-    });
-
-    // keep your mouse leave effect
-    dreamImage.addEventListener("mouseleave", () => {
-      spotlight.style.background = `
-        radial-gradient(
-          circle at var(--x, 50%) var(--y, 50%),
-          rgba(0, 0, 0, 0) 50px,
-          rgba(0, 0, 0, 0.8) 150px
-        )
-      `;
     });
 
     function shuffleArray(array) {
@@ -190,14 +171,14 @@
       const videoPath = folderPath + videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
-      videoElement.play().catch(() => {});
+
+      videoElement.play().catch(err => {
+        console.error("Video autoplay failed:", err);
+      });
     }
 
     dreamImage.addEventListener("click", () => {
-      dreamImage.classList.add("hidden");
-      glowBehindTitle.classList.add("hidden");
-      dreamVideo.classList.add("hidden");
-
+      document.getElementById("dreamContainer").classList.add("hidden");
       videoElement.classList.remove("hidden");
       spotlight.classList.add("hidden");
 
@@ -214,5 +195,6 @@
       };
     });
   </script>
+
 </body>
 </html>
