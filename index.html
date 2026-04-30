@@ -4,10 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dream</title>
-
-  <!-- helps a bit with download -->
-  <link rel="preload" as="image" href="dream-animatic-shots/dream-title-glow.gif">
-
   <link rel="icon" href="data:image/x-icon,;">
 
   <style>
@@ -60,20 +56,27 @@
         rgba(0, 0, 0, 0) 90%
       );
       opacity: 1;
-      transition: all 0.3s ease;
     }
 
-    #dreamImage {
+    #dreamImage,
+    #dreamVideo {
       width: 540px;
       height: 207.5px;
-      transition: transform 0.2s ease;
-      z-index: 2;
       position: relative;
+      z-index: 2;
       cursor: pointer;
     }
 
     #dreamImage:hover {
       transform: scale(0.95);
+      transition: transform 0.2s ease;
+    }
+
+    #dreamVideo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
     }
 
     #videoPlayer {
@@ -105,11 +108,18 @@
 
   <div id="dreamContainer">
     <div id="glowBehindTitle"></div>
+
+    <!-- STILL IMAGE -->
     <img
       id="dreamImage"
       src="dream-animatic-shots/dream-title.png"
       alt="Dream Title"
     />
+
+    <!-- WEBM (PLAYS ON HOVER) -->
+    <video id="dreamVideo" muted playsinline preload="auto">
+      <source src="dream-animatic-shots/dream-title-glow-1.webm" type="video/webm">
+    </video>
   </div>
 
   <div id="spotlightOverlay"></div>
@@ -123,44 +133,38 @@
 
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
+    const dreamVideo = document.getElementById("dreamVideo");
     const spotlight = document.getElementById("spotlightOverlay");
     const glowBehindTitle = document.getElementById("glowBehindTitle");
     const folderPath = "dream-animatic-shots/";
 
-    const stillImage = folderPath + "dream-title.png";
-    const glowGif = folderPath + "dream-title-glow.gif";
-
-    // 🔥 PRELOAD + DECODE FIX (THIS IS THE IMPORTANT PART)
-    const preloadGif = new Image();
-    preloadGif.src = glowGif;
-
-    if (preloadGif.decode) {
-      preloadGif.decode().then(() => {
-        console.log("GIF ready");
-      }).catch(() => {});
-    }
-
-    // ✨ Cursor spotlight tracking
+    // spotlight
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
       spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
-    // ✨ Hover behavior
+    // HOVER START
     dreamImage.addEventListener("mouseenter", () => {
-      dreamImage.src = glowGif;
-      spotlight.style.background = "rgba(0, 0, 0, 0)";
-
+      spotlight.style.background = "rgba(0,0,0,0)";
       glowBehindTitle.classList.add("glow");
 
-      setTimeout(() => {
-        glowBehindTitle.classList.remove("glow");
-      }, 1000);
+      dreamImage.style.visibility = "hidden";
+      dreamVideo.style.display = "block";
+
+      dreamVideo.currentTime = 0;
+      dreamVideo.play();
     });
 
-    dreamImage.addEventListener("mouseleave", () => {
-      dreamImage.src = stillImage;
+    // when video ends → go back to still
+    dreamVideo.addEventListener("ended", () => {
+      dreamVideo.style.display = "none";
+      dreamImage.style.visibility = "visible";
+      glowBehindTitle.classList.remove("glow");
+    });
 
+    // LEAVE
+    dreamImage.addEventListener("mouseleave", () => {
       spotlight.style.background = `
         radial-gradient(
           circle at var(--x, 50%) var(--y, 50%),
@@ -168,8 +172,6 @@
           rgba(0, 0, 0, 0.8) 150px
         )
       `;
-
-      glowBehindTitle.classList.remove("glow");
     });
 
     function shuffleArray(array) {
@@ -190,15 +192,14 @@
       const videoPath = folderPath + videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
-
-      videoElement.play().catch(err => {
-        console.error("Video autoplay failed:", err);
-      });
+      videoElement.play().catch(() => {});
     }
 
     dreamImage.addEventListener("click", () => {
       dreamImage.classList.add("hidden");
       glowBehindTitle.classList.add("hidden");
+      dreamVideo.classList.add("hidden");
+
       videoElement.classList.remove("hidden");
       spotlight.classList.add("hidden");
 
