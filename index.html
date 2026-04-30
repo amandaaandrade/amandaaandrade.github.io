@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dream</title>
 
-  <!-- Preload glow gif for instant hover -->
+  <!-- helps a bit with download -->
   <link rel="preload" as="image" href="dream-animatic-shots/dream-title-glow.gif">
 
-  <link rel="icon" href="data:image/x-icon,;"> <!-- Placeholder favicon -->
+  <link rel="icon" href="data:image/x-icon,;">
 
   <style>
     body {
@@ -130,11 +130,23 @@
     const stillImage = folderPath + "dream-title.png";
     const glowGif = folderPath + "dream-title-glow.gif";
 
+    // 🔥 PRELOAD + DECODE FIX (THIS IS THE IMPORTANT PART)
+    const preloadGif = new Image();
+    preloadGif.src = glowGif;
+
+    if (preloadGif.decode) {
+      preloadGif.decode().then(() => {
+        console.log("GIF ready");
+      }).catch(() => {});
+    }
+
+    // ✨ Cursor spotlight tracking
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
       spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
+    // ✨ Hover behavior
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.src = glowGif;
       spotlight.style.background = "rgba(0, 0, 0, 0)";
@@ -165,7 +177,6 @@
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
-      console.log('Shuffled Video Files:', array);
     }
 
     shuffleArray(videoFiles);
@@ -177,8 +188,6 @@
       }
 
       const videoPath = folderPath + videoFiles[currentIndex];
-      console.log('Playing video:', videoPath);
-
       videoElement.src = videoPath;
       videoElement.load();
 
@@ -201,7 +210,6 @@
       };
 
       videoElement.onerror = () => {
-        console.error("Error loading video, skipping to next.");
         currentIndex++;
         playCurrentVideo();
       };
