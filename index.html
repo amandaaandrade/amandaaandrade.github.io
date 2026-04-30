@@ -35,17 +35,11 @@
       width: 1400px;
       height: 600px;
       border-radius: 50%;
-      background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.08) 50%,
-        rgba(0, 0, 0, 0) 90%
-      );
       filter: blur(100px);
       opacity: 0;
-      transition: all 0.3s ease;
       z-index: 0;
       pointer-events: none;
+      transition: all 0.3s ease;
     }
 
     #glowBehindTitle.glow {
@@ -58,25 +52,29 @@
       opacity: 1;
     }
 
-    #dreamImage,
-    #dreamVideo {
+    #dreamImage {
       width: 540px;
       height: 207.5px;
       position: relative;
       z-index: 2;
       cursor: pointer;
+      transition: transform 0.2s ease;
     }
 
     #dreamImage:hover {
       transform: scale(0.95);
-      transition: transform 0.2s ease;
     }
 
+    /* 👇 video sits EXACTLY on top */
     #dreamVideo {
       position: absolute;
       top: 0;
       left: 0;
+      width: 540px;
+      height: 207.5px;
       display: none;
+      pointer-events: none;
+      z-index: 2;
     }
 
     #videoPlayer {
@@ -109,14 +107,14 @@
   <div id="dreamContainer">
     <div id="glowBehindTitle"></div>
 
-    <!-- STILL IMAGE -->
+    <!-- ORIGINAL IMAGE -->
     <img
       id="dreamImage"
       src="dream-animatic-shots/dream-title.png"
       alt="Dream Title"
     />
 
-    <!-- WEBM (PLAYS ON HOVER) -->
+    <!-- NEW WEBM -->
     <video id="dreamVideo" muted playsinline preload="auto">
       <source src="dream-animatic-shots/dream-title-glow-1.webm" type="video/webm">
     </video>
@@ -138,15 +136,15 @@
     const glowBehindTitle = document.getElementById("glowBehindTitle");
     const folderPath = "dream-animatic-shots/";
 
-    // spotlight
+    // spotlight tracking
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
       spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
-    // HOVER START
+    // ✅ HOVER START (play once)
     dreamImage.addEventListener("mouseenter", () => {
-      spotlight.style.background = "rgba(0,0,0,0)";
+      spotlight.style.background = "rgba(0, 0, 0, 0)";
       glowBehindTitle.classList.add("glow");
 
       dreamImage.style.visibility = "hidden";
@@ -156,14 +154,14 @@
       dreamVideo.play();
     });
 
-    // when video ends → go back to still
+    // ✅ when animation ends → reset
     dreamVideo.addEventListener("ended", () => {
       dreamVideo.style.display = "none";
       dreamImage.style.visibility = "visible";
       glowBehindTitle.classList.remove("glow");
     });
 
-    // LEAVE
+    // keep your mouse leave effect
     dreamImage.addEventListener("mouseleave", () => {
       spotlight.style.background = `
         radial-gradient(
