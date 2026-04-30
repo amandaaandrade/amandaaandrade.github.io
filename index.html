@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dream</title>
-  <link rel="icon" href="data:image/x-icon,;">
-
+  <link rel="icon" href="data:image/x-icon,;"> <!-- Placeholder favicon -->
   <style>
     body {
       margin: 0;
@@ -24,7 +23,7 @@
 
     #dreamContainer {
       position: relative;
-      cursor: pointer;
+      z-index: 1;
     }
 
     #glowBehindTitle {
@@ -35,9 +34,16 @@
       width: 1400px;
       height: 600px;
       border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(0, 0, 0, 0) 90%
+      );
       filter: blur(100px);
       opacity: 0;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      z-index: 0;
       pointer-events: none;
     }
 
@@ -49,12 +55,16 @@
         rgba(0, 0, 0, 0) 90%
       );
       opacity: 1;
+      transition: all 0.3s ease; /* Instant glow */
     }
 
     #dreamImage {
       width: 540px;
       height: 207.5px;
       transition: transform 0.2s ease;
+      z-index: 2;
+      position: relative;
+      cursor: pointer;
     }
 
     #dreamImage:hover {
@@ -64,6 +74,7 @@
     #videoPlayer {
       position: absolute;
       width: 80vw;
+      height: auto;
       border-radius: 15px;
       z-index: 10;
     }
@@ -85,51 +96,56 @@
     }
   </style>
 </head>
-
 <body>
 
+  <!-- Glowing Dream Title -->
   <div id="dreamContainer">
     <div id="glowBehindTitle"></div>
-    <img id="dreamImage" src="dream-animatic-shots/dream-title.png">
+    <img
+      id="dreamImage"
+      src="dream-animatic-shots/dream-title.png"
+      alt="Dream Title"
+    />
   </div>
 
+  <!-- Spotlight Effect Overlay -->
   <div id="spotlightOverlay"></div>
 
+  <!-- Main Video Player -->
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4", "dream-3.mp4","dream-4-fixed.mp4","dream-5.mp4"];
+    let videoFiles = [...videoFilesOriginal];
+    let currentIndex = 0;
+
+    const videoElement = document.getElementById("videoPlayer");
+    const dreamImage = document.getElementById("dreamImage");
+    const spotlight = document.getElementById("spotlightOverlay");
+    const glowBehindTitle = document.getElementById("glowBehindTitle");
     const folderPath = "dream-animatic-shots/";
 
     const stillImage = folderPath + "dream-title.png";
     const glowGif = folderPath + "dream-title-glow.gif";
 
-    const dreamImage = document.getElementById("dreamImage");
-    const glowBehindTitle = document.getElementById("glowBehindTitle");
-    const spotlight = document.getElementById("spotlightOverlay");
-
-    // 🚀 preload gif
-    const gifPreload = new Image();
-    gifPreload.src = glowGif;
-
-    // 🎯 spotlight follow
+    // ✨ Cursor spotlight tracking
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
       spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
-    // ✨ hover
+    // ✨ Swap to glow gif on hover, illuminate background
     dreamImage.addEventListener("mouseenter", () => {
-      // FORCE restart gif every hover
-      dreamImage.src = "";
       dreamImage.src = glowGif;
+      spotlight.style.background = "rgba(0, 0, 0, 0)";
 
-      spotlight.style.background = "rgba(0,0,0,0)";
+      glowBehindTitle.classList.remove("after-glow");
+      glowBehindTitle.classList.add("glow"); // Glow appears instantly
 
-      glowBehindTitle.classList.add("glow");
-
+      // Set a timeout to remove glow after 1.13s
       setTimeout(() => {
         glowBehindTitle.classList.remove("glow");
-      }, 1000);
+      }, 1000); // After 1.13 seconds, glow will turn off completely
     });
 
     dreamImage.addEventListener("mouseleave", () => {
@@ -138,31 +154,20 @@
       spotlight.style.background = `
         radial-gradient(
           circle at var(--x, 50%) var(--y, 50%),
-          rgba(0,0,0,0) 50px,
-          rgba(0,0,0,0.8) 150px
+          rgba(0, 0, 0, 0) 50px,
+          rgba(0, 0, 0, 0.8) 150px
         )
       `;
 
-      glowBehindTitle.classList.remove("glow");
+      glowBehindTitle.classList.remove("glow"); // Remove glow immediately on mouse leave
     });
-
-    // 🎥 video system (unchanged)
-    const videoFiles = [
-      "dream-1.mp4",
-      "dream-2.mp4",
-      "dream-3.mp4",
-      "dream-4-fixed.mp4",
-      "dream-5.mp4"
-    ];
-
-    let currentIndex = 0;
-    const videoElement = document.getElementById("videoPlayer");
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
+      console.log('Shuffled Video Files:', array);  // Log shuffled array to check if all files are included
     }
 
     shuffleArray(videoFiles);
@@ -173,10 +178,14 @@
         currentIndex = 0;
       }
 
-      const path = folderPath + videoFiles[currentIndex];
-      videoElement.src = path;
+      const videoPath = folderPath + videoFiles[currentIndex];
+      console.log('Playing video:', videoPath);  // Log video path to ensure it's correct
+      videoElement.src = videoPath;
       videoElement.load();
-      videoElement.play().catch(() => {});
+
+      videoElement.play().catch(err => {
+        console.error("Video autoplay failed:", err);
+      });
     }
 
     dreamImage.addEventListener("click", () => {
@@ -184,7 +193,6 @@
       glowBehindTitle.classList.add("hidden");
       videoElement.classList.remove("hidden");
       spotlight.classList.add("hidden");
-
       playCurrentVideo();
 
       videoElement.onended = () => {
@@ -193,11 +201,13 @@
       };
 
       videoElement.onerror = () => {
+        console.error("Error loading video, skipping to next.");
         currentIndex++;
         playCurrentVideo();
       };
     });
   </script>
-
 </body>
 </html>
+
+
