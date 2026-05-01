@@ -125,7 +125,7 @@
     const folderPath = "dream-animatic-shots/";
 
     const stillImage = folderPath + "dream-title.png";
-    const glowGif = folderPath + "dream-title-glow.gif";
+    const glowGif = folderPath + "dream-title-glow-final.gif";  <!-- UPDATED -->
 
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
@@ -135,7 +135,6 @@
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.src = glowGif;
       spotlight.style.background = "rgba(0, 0, 0, 0)";
-
       glowBehindTitle.classList.add("glow");
 
       setTimeout(() => {
@@ -202,4 +201,3 @@
   </script>
 </body>
 </html>
-
