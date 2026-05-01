@@ -80,6 +80,24 @@
       z-index: 10;
     }
 
+    /* NEW: WebM glow video behind title */
+    #glowVideo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 540px;
+      height: auto;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    #glowVideo.show {
+      opacity: 1;
+    }
+
     #spotlightOverlay {
       position: fixed;
       top: 0;
@@ -101,7 +119,13 @@
 <body>
 
   <div id="dreamContainer">
+
+    <video id="glowVideo" muted playsinline preload="auto">
+      <source src="dream-animatic-shots/glow-dream.webm" type="video/webm">
+    </video>
+
     <div id="glowBehindTitle"></div>
+
     <img
       id="dreamImage"
       src="dream-animatic-shots/dream-title.png"
@@ -114,7 +138,14 @@
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
-    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4", "dream-3.mp4","dream-4-fixed.mp4","dream-5.mp4"];
+    const videoFilesOriginal = [
+      "dream-1.mp4",
+      "dream-2.mp4",
+      "dream-3.mp4",
+      "dream-4-fixed.mp4",
+      "dream-5.mp4"
+    ];
+
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
 
@@ -122,10 +153,10 @@
     const dreamImage = document.getElementById("dreamImage");
     const spotlight = document.getElementById("spotlightOverlay");
     const glowBehindTitle = document.getElementById("glowBehindTitle");
+    const glowVideo = document.getElementById("glowVideo");
     const folderPath = "dream-animatic-shots/";
 
     const stillImage = folderPath + "dream-title.png";
-    const glowGif = folderPath + "dream-title-glow-final.gif";  <!-- UPDATED -->
 
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
@@ -133,7 +164,10 @@
     });
 
     dreamImage.addEventListener("mouseenter", () => {
-      dreamImage.src = glowGif;
+      glowVideo.classList.add("show");
+      glowVideo.currentTime = 0;
+      glowVideo.play();
+
       spotlight.style.background = "rgba(0, 0, 0, 0)";
       glowBehindTitle.classList.add("glow");
 
@@ -143,7 +177,8 @@
     });
 
     dreamImage.addEventListener("mouseleave", () => {
-      dreamImage.src = stillImage;
+      glowVideo.pause();
+      glowVideo.classList.remove("show");
 
       spotlight.style.background = `
         radial-gradient(
