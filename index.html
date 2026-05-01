@@ -4,7 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dream</title>
+
+  <!-- Preload glow gif for instant hover -->
+  <link rel="preload" as="image" href="dream-animatic-shots/dream-title-glow.gif">
+
   <link rel="icon" href="data:image/x-icon,;"> <!-- Placeholder favicon -->
+
   <style>
     body {
       margin: 0;
@@ -55,7 +60,7 @@
         rgba(0, 0, 0, 0) 90%
       );
       opacity: 1;
-      transition: all 0.3s ease; /* Instant glow */
+      transition: all 0.3s ease;
     }
 
     #dreamImage {
@@ -98,7 +103,6 @@
 </head>
 <body>
 
-  <!-- Glowing Dream Title -->
   <div id="dreamContainer">
     <div id="glowBehindTitle"></div>
     <img
@@ -108,10 +112,8 @@
     />
   </div>
 
-  <!-- Spotlight Effect Overlay -->
   <div id="spotlightOverlay"></div>
 
-  <!-- Main Video Player -->
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
@@ -128,24 +130,20 @@
     const stillImage = folderPath + "dream-title.png";
     const glowGif = folderPath + "dream-title-glow-47";
 
-    // ✨ Cursor spotlight tracking
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
       spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
-    // ✨ Swap to glow gif on hover, illuminate background
     dreamImage.addEventListener("mouseenter", () => {
       dreamImage.src = glowGif;
       spotlight.style.background = "rgba(0, 0, 0, 0)";
 
-      glowBehindTitle.classList.remove("after-glow");
-      glowBehindTitle.classList.add("glow"); // Glow appears instantly
+      glowBehindTitle.classList.add("glow");
 
-      // Set a timeout to remove glow after 1.13s
       setTimeout(() => {
         glowBehindTitle.classList.remove("glow");
-      }, 1000); // After 1.13 seconds, glow will turn off completely
+      }, 1000);
     });
 
     dreamImage.addEventListener("mouseleave", () => {
@@ -159,7 +157,7 @@
         )
       `;
 
-      glowBehindTitle.classList.remove("glow"); // Remove glow immediately on mouse leave
+      glowBehindTitle.classList.remove("glow");
     });
 
     function shuffleArray(array) {
@@ -167,7 +165,7 @@
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
-      console.log('Shuffled Video Files:', array);  // Log shuffled array to check if all files are included
+      console.log('Shuffled Video Files:', array);
     }
 
     shuffleArray(videoFiles);
@@ -179,7 +177,8 @@
       }
 
       const videoPath = folderPath + videoFiles[currentIndex];
-      console.log('Playing video:', videoPath);  // Log video path to ensure it's correct
+      console.log('Playing video:', videoPath);
+
       videoElement.src = videoPath;
       videoElement.load();
 
@@ -193,6 +192,7 @@
       glowBehindTitle.classList.add("hidden");
       videoElement.classList.remove("hidden");
       spotlight.classList.add("hidden");
+
       playCurrentVideo();
 
       videoElement.onended = () => {
@@ -209,5 +209,3 @@
   </script>
 </body>
 </html>
-
-
