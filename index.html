@@ -22,7 +22,6 @@
       display: none;
     }
 
-    /* ✅ stable centered container */
     #dreamContainer {
       position: relative;
       width: 540px;
@@ -31,8 +30,8 @@
       transition: transform 0.2s ease;
     }
 
-    /* 🔥 WEBM glow layer */
-    #glowVideo {
+    /* 🔥 PNG SEQUENCE CANVAS */
+    #glowCanvas {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -42,43 +41,10 @@
       z-index: 2;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.15s ease;
-
-      filter: saturate(1.35) contrast(1.15) brightness(1.08);
+      transition: opacity 0.1s ease;
     }
 
-    #glowVideo.show {
-      opacity: 1;
-    }
-
-    #glowBehindTitle {
-      position: absolute;
-      width: 1400px;
-      height: 600px;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.08) 50%,
-        rgba(0, 0, 0, 0) 90%
-      );
-      filter: blur(100px);
-      opacity: 0;
-      transition: all 0.3s ease;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    #glowBehindTitle.glow {
-      background: radial-gradient(
-        circle,
-        rgba(254, 57, 255, 0.25) 0%,
-        rgba(254, 57, 255, 0.08) 50%,
-        rgba(0, 0, 0, 0) 90%
-      );
+    #glowCanvas.show {
       opacity: 1;
     }
 
@@ -123,12 +89,8 @@
 
   <div id="dreamContainer">
 
-    <!-- 🔥 WEBM -->
-    <video id="glowVideo" muted playsinline preload="auto">
-      <source src="dream-animatic-shots/glow-title-dream.webm" type="video/webm">
-    </video>
-
-    <div id="glowBehindTitle"></div>
+    <!-- 🔥 PNG SEQUENCE -->
+    <canvas id="glowCanvas" width="1080" height="415"></canvas>
 
     <img
       id="dreamImage"
@@ -142,40 +104,64 @@
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
-    const videoFilesOriginal = [
-      "dream-1.mp4",
-      "dream-2.mp4",
-      "dream-3.mp4",
-      "dream-4-fixed.mp4",
-      "dream-5.mp4"
-    ];
+    const canvas = document.getElementById("glowCanvas");
+    const ctx = canvas.getContext("2d");
 
-    let videoFiles = [...videoFilesOriginal];
-    let currentIndex = 0;
-
-    const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
     const dreamContainer = document.getElementById("dreamContainer");
     const spotlight = document.getElementById("spotlightOverlay");
-    const glowVideo = document.getElementById("glowVideo");
 
-    document.addEventListener("mousemove", (e) => {
-      spotlight.style.setProperty("--x", e.clientX + "px");
-      spotlight.style.setProperty("--y", e.clientY + "px");
-    });
+    const totalFrames = 48; // 🔥 adjust if needed
+    const frameRate = 30;
+    let frames = [];
+    let currentFrame = 0;
+    let playing = false;
+
+    // 🔥 PRELOAD FRAMES
+    for (let i = 0; i < totalFrames; i++) {
+      const img = new Image();
+      img.src = `title seq/dream-glow${String(i).padStart(2, '0')}.png`;
+      frames.push(img);
+    }
+
+    function drawFrame(index) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(frames[index], 0, 0);
+    }
+
+    function playSequence() {
+      if (playing) return;
+      playing = true;
+      currentFrame = 0;
+
+      canvas.classList.add("show");
+
+      function animate() {
+        if (!playing) return;
+
+        drawFrame(currentFrame);
+        currentFrame++;
+
+        if (currentFrame < totalFrames) {
+          setTimeout(() => requestAnimationFrame(animate), 1000 / frameRate);
+        } else {
+          playing = false;
+        }
+      }
+
+      animate();
+    }
 
     dreamImage.addEventListener("mouseenter", () => {
-      glowVideo.classList.add("show");
-      glowVideo.currentTime = 0;
-      glowVideo.play();
+      playSequence();
 
       dreamContainer.style.transform = "scale(0.95)";
       spotlight.style.background = "rgba(0, 0, 0, 0)";
     });
 
     dreamImage.addEventListener("mouseleave", () => {
-      glowVideo.pause();
-      glowVideo.classList.remove("show");
+      playing = false;
+      canvas.classList.remove("show");
 
       dreamContainer.style.transform = "scale(1)";
 
@@ -188,43 +174,9 @@
       `;
     });
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-
-    shuffleArray(videoFiles);
-
-    function playCurrentVideo() {
-      if (currentIndex >= videoFiles.length) {
-        shuffleArray(videoFiles);
-        currentIndex = 0;
-      }
-
-      const videoPath = "dream-animatic-shots/" + videoFiles[currentIndex];
-      videoElement.src = videoPath;
-      videoElement.load();
-      videoElement.play().catch(err => console.error(err));
-    }
-
-    dreamImage.addEventListener("click", () => {
-      dreamContainer.classList.add("hidden");
-      videoElement.classList.remove("hidden");
-      spotlight.classList.add("hidden");
-
-      playCurrentVideo();
-
-      videoElement.onended = () => {
-        currentIndex++;
-        playCurrentVideo();
-      };
-
-      videoElement.onerror = () => {
-        currentIndex++;
-        playCurrentVideo();
-      };
+    document.addEventListener("mousemove", (e) => {
+      spotlight.style.setProperty("--x", e.clientX + "px");
+      spotlight.style.setProperty("--y", e.clientY + "px");
     });
   </script>
 
