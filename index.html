@@ -114,14 +114,7 @@
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
-    const videoFilesOriginal = [
-      "dream-1.mp4",
-      "dream-2.mp4",
-      "dream-3.mp4",
-      "dream-4-fixed.mp4",
-      "dream-5.mp4"
-    ];
-
+    const videoFilesOriginal = ["dream-1.mp4", "dream-2.mp4", "dream-3.mp4","dream-4-fixed.mp4","dream-5.mp4"];
     let videoFiles = [...videoFilesOriginal];
     let currentIndex = 0;
 
@@ -132,7 +125,7 @@
     const folderPath = "dream-animatic-shots/";
 
     const stillImage = folderPath + "dream-title.png";
-    const glowVideo = folderPath + "dream-title-glow.webm"; // ✅ UPDATED
+    const glowGif = folderPath + "dream-title-glow.gif";
 
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
@@ -140,9 +133,9 @@
     });
 
     dreamImage.addEventListener("mouseenter", () => {
-      dreamImage.src = glowVideo; // NOTE: this now expects a webm if used as img won't work visually
-
+      dreamImage.src = glowGif;
       spotlight.style.background = "rgba(0, 0, 0, 0)";
+
       glowBehindTitle.classList.add("glow");
 
       setTimeout(() => {
@@ -209,3 +202,4 @@
   </script>
 </body>
 </html>
+
