@@ -44,7 +44,6 @@
       opacity: 0;
       transition: opacity 0.15s ease;
 
-      /* 🔥 FIX: restore vibrancy */
       filter: saturate(1.35) contrast(1.15) brightness(1.08);
     }
 
@@ -126,7 +125,7 @@
 
     <!-- 🔥 WEBM -->
     <video id="glowVideo" muted playsinline preload="auto">
-      <source src="dream-animatic-shots/glow-dream.webm" type="video/webm">
+      <source src="dream-animatic-shots/glow-title-dream.webm" type="video/webm">
     </video>
 
     <div id="glowBehindTitle"></div>
@@ -158,7 +157,6 @@
     const dreamImage = document.getElementById("dreamImage");
     const dreamContainer = document.getElementById("dreamContainer");
     const spotlight = document.getElementById("spotlightOverlay");
-    const glowBehindTitle = document.getElementById("glowBehindTitle");
     const glowVideo = document.getElementById("glowVideo");
 
     document.addEventListener("mousemove", (e) => {
@@ -166,7 +164,6 @@
       spotlight.style.setProperty("--y", e.clientY + "px");
     });
 
-    /* 🔥 HOVER IN */
     dreamImage.addEventListener("mouseenter", () => {
       glowVideo.classList.add("show");
       glowVideo.currentTime = 0;
@@ -174,10 +171,8 @@
 
       dreamContainer.style.transform = "scale(0.95)";
       spotlight.style.background = "rgba(0, 0, 0, 0)";
-      glowBehindTitle.classList.add("glow");
     });
 
-    /* 🔥 HOVER OUT */
     dreamImage.addEventListener("mouseleave", () => {
       glowVideo.pause();
       glowVideo.classList.remove("show");
@@ -191,8 +186,6 @@
           rgba(0, 0, 0, 0.8) 150px
         )
       `;
-
-      glowBehindTitle.classList.remove("glow");
     });
 
     function shuffleArray(array) {
