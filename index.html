@@ -22,23 +22,28 @@
       display: none;
     }
 
+    /* ✅ FIXED: unified container sizing */
     #dreamContainer {
       position: relative;
+      width: 540px;
+      height: 207.5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center;
+      transition: transform 0.2s ease;
       z-index: 1;
     }
 
-    /* 🔥 WEBM GLOW LAYER */
+    /* 🔥 WEBM GLOW LAYER (aligned to container) */
     #glowVideo {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 540px;
+      width: 100%;
       height: auto;
-      z-index: 3;
+      z-index: 2;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: opacity 0.15s ease;
     }
 
     #glowVideo.show {
@@ -47,9 +52,6 @@
 
     #glowBehindTitle {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       width: 1400px;
       height: 600px;
       border-radius: 50%;
@@ -77,16 +79,11 @@
     }
 
     #dreamImage {
-      width: 540px;
-      height: 207.5px;
-      transition: transform 0.2s ease;
-      z-index: 4;
+      width: 100%;
+      height: auto;
+      z-index: 3;
       position: relative;
       cursor: pointer;
-    }
-
-    #dreamImage:hover {
-      transform: scale(0.95);
     }
 
     #videoPlayer {
@@ -119,7 +116,7 @@
 
   <div id="dreamContainer">
 
-    <!-- 🔥 WEBM GLOW -->
+    <!-- 🔥 WEBM -->
     <video id="glowVideo" muted playsinline preload="auto">
       <source src="dream-animatic-shots/glow-dream.webm" type="video/webm">
     </video>
@@ -151,12 +148,11 @@
 
     const videoElement = document.getElementById("videoPlayer");
     const dreamImage = document.getElementById("dreamImage");
+    const dreamContainer = document.getElementById("dreamContainer");
     const spotlight = document.getElementById("spotlightOverlay");
     const glowBehindTitle = document.getElementById("glowBehindTitle");
     const glowVideo = document.getElementById("glowVideo");
     const folderPath = "dream-animatic-shots/";
-
-    const stillImage = folderPath + "dream-title.png";
 
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
@@ -169,15 +165,9 @@
       glowVideo.currentTime = 0;
       glowVideo.play();
 
-      glowVideo.style.transform = "translate(-50%, -50%) scale(0.95)";
-      dreamImage.style.transform = "scale(0.95)";
-
+      dreamContainer.style.transform = "scale(0.95)";
       spotlight.style.background = "rgba(0, 0, 0, 0)";
       glowBehindTitle.classList.add("glow");
-
-      setTimeout(() => {
-        glowBehindTitle.classList.remove("glow");
-      }, 1000);
     });
 
     /* 🔥 HOVER OUT */
@@ -185,8 +175,7 @@
       glowVideo.pause();
       glowVideo.classList.remove("show");
 
-      glowVideo.style.transform = "translate(-50%, -50%) scale(1)";
-      dreamImage.style.transform = "scale(1)";
+      dreamContainer.style.transform = "scale(1)";
 
       spotlight.style.background = `
         radial-gradient(
@@ -224,8 +213,7 @@
     }
 
     dreamImage.addEventListener("click", () => {
-      dreamImage.classList.add("hidden");
-      glowBehindTitle.classList.add("hidden");
+      dreamContainer.classList.add("hidden");
       videoElement.classList.remove("hidden");
       spotlight.classList.add("hidden");
 
@@ -242,5 +230,6 @@
       };
     });
   </script>
+
 </body>
 </html>
