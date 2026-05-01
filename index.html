@@ -22,22 +22,21 @@
       display: none;
     }
 
-    /* ✅ FIXED: unified container sizing */
+    /* ✅ stable centered container */
     #dreamContainer {
       position: relative;
       width: 540px;
       height: 207.5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       transform-origin: center;
       transition: transform 0.2s ease;
-      z-index: 1;
     }
 
-    /* 🔥 WEBM GLOW LAYER (aligned to container) */
+    /* 🔥 WEBM glow layer */
     #glowVideo {
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 100%;
       height: auto;
       z-index: 2;
@@ -54,6 +53,9 @@
       position: absolute;
       width: 1400px;
       height: 600px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       border-radius: 50%;
       background: radial-gradient(
         circle,
@@ -79,11 +81,14 @@
     }
 
     #dreamImage {
+      position: absolute;
       width: 100%;
       height: auto;
       z-index: 3;
-      position: relative;
       cursor: pointer;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     #videoPlayer {
@@ -152,7 +157,6 @@
     const spotlight = document.getElementById("spotlightOverlay");
     const glowBehindTitle = document.getElementById("glowBehindTitle");
     const glowVideo = document.getElementById("glowVideo");
-    const folderPath = "dream-animatic-shots/";
 
     document.addEventListener("mousemove", (e) => {
       spotlight.style.setProperty("--x", e.clientX + "px");
@@ -203,13 +207,10 @@
         currentIndex = 0;
       }
 
-      const videoPath = folderPath + videoFiles[currentIndex];
+      const videoPath = "dream-animatic-shots/" + videoFiles[currentIndex];
       videoElement.src = videoPath;
       videoElement.load();
-
-      videoElement.play().catch(err => {
-        console.error("Video autoplay failed:", err);
-      });
+      videoElement.play().catch(err => console.error(err));
     }
 
     dreamImage.addEventListener("click", () => {
