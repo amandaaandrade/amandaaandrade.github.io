@@ -1,202 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dream</title>
-  <link rel="icon" href="data:image/x-icon,;">
+<script>
+  const canvas = document.getElementById("glowCanvas");
+  const ctx = canvas.getContext("2d");
 
-  <style>
-    body {
-      margin: 0;
-      background: url('dream-animatic-shots/bg-no-glow.png') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
+  const dreamImage = document.getElementById("dreamImage");
+  const dreamContainer = document.getElementById("dreamContainer");
+  const spotlight = document.getElementById("spotlightOverlay");
+
+  const totalFrames = 48;
+  const frameRate = 30;
+
+  let frames = [];
+  let loadedCount = 0;
+  let currentFrame = 0;
+  let playing = false;
+
+  /* ✅ FIXED PATH */
+  const path = "title-seq/";
+
+  /* 🔥 PRELOAD */
+  for (let i = 0; i < totalFrames; i++) {
+    const img = new Image();
+
+    img.src = `${path}dream-glow${String(i).padStart(2, '0')}.png?v=2`;
+
+    img.onload = () => loadedCount++;
+    img.onerror = () => console.warn("Missing:", img.src);
+
+    frames.push(img);
+  }
+
+  function drawFrame(index) {
+    const img = frames[index];
+
+    if (!img || !img.complete || img.naturalWidth === 0) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+  }
+
+  function playSequence() {
+    if (playing) return;
+
+    playing = true;
+    currentFrame = 0;
+
+    canvas.classList.add("show");
+
+    let lastTime = 0;
+
+    function animate(time) {
+      if (!playing) return;
+
+      if (time - lastTime >= 1000 / frameRate) {
+        drawFrame(currentFrame);
+        currentFrame++;
+        lastTime = time;
+      }
+
+      if (currentFrame < totalFrames) {
+        requestAnimationFrame(animate);
+      } else {
+        playing = false;
+      }
     }
 
-    .hidden {
-      display: none;
-    }
+    requestAnimationFrame(animate);
+  }
 
-    #dreamContainer {
-      position: relative;
-      width: 540px;
-      height: 207.5px;
-      transform-origin: center;
-      transition: transform 0.2s ease;
-    }
+  dreamImage.addEventListener("mouseenter", () => {
+    playSequence();
 
-    /* 🔥 PNG SEQUENCE */
-    #glowCanvas {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: auto;
-      z-index: 4; /* 🔥 ABOVE image */
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.1s ease;
-    }
+    dreamContainer.style.transform = "scale(0.95)";
+    spotlight.style.background = "rgba(0, 0, 0, 0)";
+  });
 
-    #glowCanvas.show {
-      opacity: 1;
-    }
+  dreamImage.addEventListener("mouseleave", () => {
+    playing = false;
+    canvas.classList.remove("show");
 
-    #dreamImage {
-      position: absolute;
-      width: 100%;
-      height: auto;
-      z-index: 3;
-      cursor: pointer;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+    dreamContainer.style.transform = "scale(1)";
 
-    #videoPlayer {
-      position: absolute;
-      width: 80vw;
-      height: auto;
-      border-radius: 15px;
-      z-index: 10;
-    }
-
-    #spotlightOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 5;
-      background: radial-gradient(
+    spotlight.style.background = `
+      radial-gradient(
         circle at var(--x, 50%) var(--y, 50%),
         rgba(0, 0, 0, 0) 50px,
         rgba(0, 0, 0, 0.8) 150px
-      );
-      transition: background 0.3s ease;
-    }
-  </style>
-</head>
+      )
+    `;
+  });
 
-<body>
-
-  <div id="dreamContainer">
-    <canvas id="glowCanvas" width="1080" height="415"></canvas>
-
-    <img
-      id="dreamImage"
-      src="dream-animatic-shots/dream-title.png"
-      alt="Dream Title"
-    />
-  </div>
-
-  <div id="spotlightOverlay"></div>
-  <video id="videoPlayer" class="hidden" playsinline></video>
-
-  <script>
-    const canvas = document.getElementById("glowCanvas");
-    const ctx = canvas.getContext("2d");
-
-    const dreamImage = document.getElementById("dreamImage");
-    const dreamContainer = document.getElementById("dreamContainer");
-    const spotlight = document.getElementById("spotlightOverlay");
-
-    const totalFrames = 48;
-    const frameRate = 30;
-
-    let frames = [];
-    let loadedCount = 0;
-    let currentFrame = 0;
-    let playing = false;
-
-    /* 🔥 IMPORTANT: FIX THIS PATH IF NEEDED */
-    const path = "dream-animatic-shots/title-seq/";
-
-    /* 🔥 PRELOAD */
-    for (let i = 0; i < totalFrames; i++) {
-      const img = new Image();
-
-      img.src = `${path}dream-glow${String(i).padStart(2, '0')}.png?v=1`;
-
-      img.onload = () => {
-        loadedCount++;
-      };
-
-      frames.push(img);
-    }
-
-    function drawFrame(index) {
-      const img = frames[index];
-
-      if (!img || !img.complete || img.naturalWidth === 0) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
-    }
-
-    function playSequence() {
-      if (playing || loadedCount < totalFrames) return;
-
-      playing = true;
-      currentFrame = 0;
-
-      canvas.classList.add("show");
-
-      let lastTime = 0;
-
-      function animate(time) {
-        if (!playing) return;
-
-        if (time - lastTime >= 1000 / frameRate) {
-          drawFrame(currentFrame);
-          currentFrame++;
-          lastTime = time;
-        }
-
-        if (currentFrame < totalFrames) {
-          requestAnimationFrame(animate);
-        } else {
-          playing = false;
-        }
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    dreamImage.addEventListener("mouseenter", () => {
-      playSequence();
-
-      dreamContainer.style.transform = "scale(0.95)";
-      spotlight.style.background = "rgba(0, 0, 0, 0)";
-    });
-
-    dreamImage.addEventListener("mouseleave", () => {
-      playing = false;
-      canvas.classList.remove("show");
-
-      dreamContainer.style.transform = "scale(1)";
-
-      spotlight.style.background = `
-        radial-gradient(
-          circle at var(--x, 50%) var(--y, 50%),
-          rgba(0, 0, 0, 0) 50px,
-          rgba(0, 0, 0, 0.8) 150px
-        )
-      `;
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      spotlight.style.setProperty("--x", e.clientX + "px");
-      spotlight.style.setProperty("--y", e.clientY + "px");
-    });
-  </script>
-
-</body>
-</html>
+  document.addEventListener("mousemove", (e) => {
+    spotlight.style.setProperty("--x", e.clientX + "px");
+    spotlight.style.setProperty("--y", e.clientY + "px");
+  });
+</script>
