@@ -1,9 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dream</title>
+
+<style>
+body {
+  margin: 0;
+  background: url('dream-animatic-shots/bg-no-glow.png') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* centered container */
+#dreamContainer {
+  position: relative;
+  width: 540px;
+  height: 207.5px;
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+/* PNG sequence overlay */
+#glowCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* title image */
+#dreamImage {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  z-index: 3;
+  cursor: pointer;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* centered video */
+#videoPlayer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70vw;
+  max-width: 900px;
+  height: auto;
+  border-radius: 15px;
+  z-index: 10;
+}
+
+/* spotlight */
+#spotlightOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 5;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(0, 0, 0, 0) 50px,
+    rgba(0, 0, 0, 0.8) 150px
+  );
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="dreamContainer">
+  <canvas id="glowCanvas" width="540" height="207.5"></canvas>
+
+  <img
+    id="dreamImage"
+    src="dream-animatic-shots/dream-title.png"
+    alt="Dream Title"
+  />
+</div>
+
+<div id="spotlightOverlay"></div>
+<video id="videoPlayer" class="hidden" playsinline></video>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* =========================
-     🎬 VIDEO SECTION
-  ========================== */
+  /* ================= VIDEO ================= */
+
   const videoFilesOriginal = [
     "dream-1.mp4",
     "dream-2.mp4",
@@ -20,17 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const dreamContainer = document.getElementById("dreamContainer");
   const spotlight = document.getElementById("spotlightOverlay");
 
-  /* =========================
-     🎨 PNG SEQUENCE SETUP
-  ========================== */
+  /* ================= PNG SEQUENCE ================= */
 
   const canvas = document.getElementById("glowCanvas");
-
-  if (!canvas) {
-    console.error("Canvas not found");
-    return;
-  }
-
   const ctx = canvas.getContext("2d");
 
   const totalFrames = 48;
@@ -42,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const sequencePath = "title-seq/";
 
-  // preload frames
   for (let i = 0; i < totalFrames; i++) {
     const img = new Image();
     img.src = `${sequencePath}dream-glow${String(i).padStart(2, '0')}.png`;
@@ -85,9 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(animate);
   }
 
-  /* =========================
-     🖱️ INTERACTIONS
-  ========================== */
+  /* ================= INTERACTIONS ================= */
 
   document.addEventListener("mousemove", (e) => {
     spotlight.style.setProperty("--x", e.clientX + "px");
@@ -112,9 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   });
 
-  /* =========================
-     🎲 VIDEO PLAYBACK
-  ========================== */
+  /* ================= VIDEO LOGIC ================= */
 
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -157,3 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
+
+</body>
+</html>
