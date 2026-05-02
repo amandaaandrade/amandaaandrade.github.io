@@ -30,7 +30,7 @@
       transition: transform 0.2s ease;
     }
 
-    /* 🔥 PNG SEQUENCE CANVAS */
+    /* 🔥 PNG SEQUENCE */
     #glowCanvas {
       position: absolute;
       top: 50%;
@@ -38,7 +38,7 @@
       transform: translate(-50%, -50%);
       width: 100%;
       height: auto;
-      z-index: 2;
+      z-index: 4; /* 🔥 ABOVE image */
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.1s ease;
@@ -88,8 +88,6 @@
 <body>
 
   <div id="dreamContainer">
-
-    <!-- 🔥 PNG SEQUENCE -->
     <canvas id="glowCanvas" width="1080" height="415"></canvas>
 
     <img
@@ -100,7 +98,6 @@
   </div>
 
   <div id="spotlightOverlay"></div>
-
   <video id="videoPlayer" class="hidden" playsinline></video>
 
   <script>
@@ -111,45 +108,66 @@
     const dreamContainer = document.getElementById("dreamContainer");
     const spotlight = document.getElementById("spotlightOverlay");
 
-    const totalFrames = 48; // 🔥 adjust if needed
+    const totalFrames = 48;
     const frameRate = 30;
+
     let frames = [];
+    let loadedCount = 0;
     let currentFrame = 0;
     let playing = false;
 
-    // 🔥 PRELOAD FRAMES
+    /* 🔥 IMPORTANT: FIX THIS PATH IF NEEDED */
+    const path = "dream-animatic-shots/title-seq/";
+
+    /* 🔥 PRELOAD */
     for (let i = 0; i < totalFrames; i++) {
       const img = new Image();
-      img.src = `title-seq/dream-glow${String(i).padStart(2, '0')}.png`;
+
+      img.src = `${path}dream-glow${String(i).padStart(2, '0')}.png?v=1`;
+
+      img.onload = () => {
+        loadedCount++;
+      };
+
       frames.push(img);
     }
 
     function drawFrame(index) {
+      const img = frames[index];
+
+      if (!img || !img.complete || img.naturalWidth === 0) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(frames[index], 0, 0);
+      ctx.drawImage(img, 0, 0);
     }
 
     function playSequence() {
-      if (playing) return;
+      if (playing || loadedCount < totalFrames) return;
+
       playing = true;
       currentFrame = 0;
 
       canvas.classList.add("show");
 
-      function animate() {
+      let lastTime = 0;
+
+      function animate(time) {
         if (!playing) return;
 
-        drawFrame(currentFrame);
-        currentFrame++;
+        if (time - lastTime >= 1000 / frameRate) {
+          drawFrame(currentFrame);
+          currentFrame++;
+          lastTime = time;
+        }
 
         if (currentFrame < totalFrames) {
-          setTimeout(() => requestAnimationFrame(animate), 1000 / frameRate);
+          requestAnimationFrame(animate);
         } else {
           playing = false;
         }
       }
 
-      animate();
+      requestAnimationFrame(animate);
     }
 
     dreamImage.addEventListener("mouseenter", () => {
