@@ -14,8 +14,8 @@
   let currentFrame = 0;
   let playing = false;
 
-  /* ✅ FIXED PATH */
-  const path = "title-seq/";
+  /* ✅ FIXED PATH (space instead of dash) */
+  const path = "title seq/";
 
   /* 🔥 PRELOAD */
   for (let i = 0; i < totalFrames; i++) {
@@ -69,7 +69,6 @@
 
   dreamImage.addEventListener("mouseenter", () => {
     playSequence();
-
     dreamContainer.style.transform = "scale(0.95)";
     spotlight.style.background = "rgba(0, 0, 0, 0)";
   });
@@ -77,7 +76,6 @@
   dreamImage.addEventListener("mouseleave", () => {
     playing = false;
     canvas.classList.remove("show");
-
     dreamContainer.style.transform = "scale(1)";
 
     spotlight.style.background = `
